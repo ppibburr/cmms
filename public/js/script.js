@@ -106,7 +106,8 @@ $(function(){
     // we use `jQuery.text` to set the contents of the todo item.
     setText: function() {
       var text = this.model.get('text');
-      this.$('.todo-text').text(text);
+      var order = this.model.get('order');
+      this.$('.todo-text').text(order+" "+text);
       this.input = this.$('.todo-input');
       this.input.bind('blur', _.bind(this.close, this)).val(text);
     },

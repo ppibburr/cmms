@@ -2,15 +2,25 @@
 
 %div#todoapp
   %div.title
-    %h1
-      Todos
-      %div.content
-        %div#create-todo
-          %input#new-todo{"placeholder" => "What needs to be done?", "type" => "text"}/
-          %span.ui-tooltip-top{"style" => "display:none;"} Press Enter to save this task
-        %div#todos
-          %ul#todo-list
-        %div#todo-stats
+    <img src=/img/gg-logo.jpg></img>
+    %h2
+      Work Orders
+    %div.content
+      %div#create-todo
+        %input#new-todo{"placeholder" => "What needs to be done?", "type" => "text"}/
+        %span.ui-tooltip-top{"style" => "display:none;"} Press Enter to save this task
+      %div#todos
+        %hr
+        <input type="radio" name="gender" value="male">Open</input>
+        <input type="radio" name="gender" value="female"> Closed</input>
+        <input type="radio" name="gender" value="male"> PM</input>
+        <input type="radio" name="gender" value="female"> Reactive  </input>
+        <input type="radio" name="gender" value="female"> Project  </input> 
+        <input type="radio" name="gender" value="female"> Safety</input>
+        <input type="radio" name="gender" value="female"> URGENT<br>                           
+        %hr
+        %ul#todo-list
+      %div#todo-stats
 
 / Templates
 

@@ -54,7 +54,7 @@ def ele t,*o,&b; Node.new(t,*o,&b); end
 
 class Node
   attr_reader :children
-  [:div,:para,:pre,:code, :small, :u, :a, :b, :e, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
+  [:div,:para,:pre,:code, :small, :h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
     define_method t do |*o,&b|
       (@children ||= []) << e=ele(t,*o,&b)
       @children.last
@@ -133,7 +133,7 @@ class List < FlexTable
       this=self    
       self << (FlexRow.new() {
         this.header.each_with_index do |v,i|
-          e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0))
+          e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0), "flex-shrink": 0)
           self << e
         end
       }.style! flex: 0)
@@ -143,7 +143,7 @@ class List < FlexTable
 			this.data.each_with_index do |r,i|
 			  row() {
 				r.each_with_index do |cell,ii|
-				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0)))
+				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0), "flex-shrink": 0))
 				end
 			  }.style! flex: this.grow_rows? ? 1 : 0
 			end
@@ -182,49 +182,3 @@ class List < FlexTable
     super
   end
 end
-
-def main
-  Node.new(:html) {
-    self << '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
-    style {
-      """
-      html, body {
-        margin: 0;
-        padding: 0;
-      }
-      
-      .flex-row {
-        display: flex;
-        flex-direction: row;
-      }
-      
-      .flex-table {
-        display: flex;
-        flex-direction: column;
-      }    
-      """
-    }
-    
-    d = []
-    5.times do 
-      d << [1,2,3]
-    end
-    self << FlexTable.new() {
-      row() {
-        "stuff"
-      }.style! flex:0
-      list(grow_rows: true, columns: [1,3,1], header: [:One, :Two, :Three], data: d) {
-        render do |d, r,c|
-          ele(:div) {
-            "#{r}:#{c}"
-          }
-        end
-      }.style! flex: 1, overflow: "hidden"
-      row() {
-        "footer"
-      }.style! flex:0
-    }.style!(flex:1,"min-height": "100vh", "max-height": "100vh")
-  }
-end
-
-puts main.to_s

@@ -4,9 +4,18 @@ require 'mongo'
 require 'json'
 
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
-
+require 'open3'
 get '/' do
-  haml :index, :attr_wrapper => '"', :locals => {:title => 'haii'}
+  Open3.popen3("ruby ./views/workorder.rb") do |i,o,e,w|
+    i.puts DB["todos"].find.to_a.map{|t| from_bson_id(t)}.to_json
+    succ = o.read
+    err = e.read
+    if err.empty?
+     succ
+    else
+      err.gsub("\n","<br>")
+    end 
+  end
 end
 
 get '/todo' do
@@ -33,7 +42,7 @@ delete '/api/:thing/:id' do
 end
 
 put '/api/:thing/:id' do
-  DB[params[:thing]].update({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
+  DB[params[:thing]].update_one({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
   ""
 end
 
