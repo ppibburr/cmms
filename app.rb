@@ -7,7 +7,7 @@ DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require 'open3'
 get '/' do
   Open3.popen3("ruby ./views/workorder.rb") do |i,o,e,w|
-    i.puts DB["todos"].find.to_a.map{|t| from_bson_id(t)}.to_json
+    i.puts DB["workorders"].find.to_a.map{|t| from_bson_id(t)}.to_json
     succ = o.read
     err = e.read
     if err.empty?
@@ -31,8 +31,10 @@ get '/api/:thing/:id' do
 end
 
 post '/api/:thing' do
-  oid = DB[params[:thing]].insert_one(JSON.parse(request.body.read.to_s))
-  p oid=oid.inserted_id
+  obj = JSON.parse(request.body.read.to_s)
+  obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
+  oid = DB[params[:thing]].insert_one(obj)
+  oid=oid.inserted_id
   "{\"_id\": \"#{oid.to_s}\"}"
 end
 

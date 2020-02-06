@@ -54,7 +54,7 @@ def ele t,*o,&b; Node.new(t,*o,&b); end
 
 class Node
   attr_reader :children
-  [:div,:para,:pre,:code, :small, :h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
+  [:div,:para,:pre,:code, :small, :head, :title, :meta,:h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
     define_method t do |*o,&b|
       (@children ||= []) << e=ele(t,*o,&b)
       @children.last
@@ -134,6 +134,7 @@ class List < FlexTable
       self << (FlexRow.new() {
         this.header.each_with_index do |v,i|
           e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0), "flex-shrink": 0)
+          e.style! "background-color": "darkblue", color: :azure
           self << e
         end
       }.style! flex: 0)
@@ -143,9 +144,10 @@ class List < FlexTable
 			this.data.each_with_index do |r,i|
 			  row() {
 				r.each_with_index do |cell,ii|
+				  
 				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0), "flex-shrink": 0))
 				end
-			  }.style! flex: this.grow_rows? ? 1 : 0
+			  }.style! flex: this.grow_rows? ? 1 : 0, "border-bottom": "solid 1px rosybrown"
 			end
 		  }.style!(flex: 1))
 		}.style! flex: 1,overflow: :auto, position: :relative
