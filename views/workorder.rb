@@ -22,7 +22,7 @@ class WorkOrders < FlexTable
             span() {
               _["equip"]
             }.style! color: :"#009688"
-            div() {
+            div(onclick: "view(#{_["order"]})") {
               em() {_["tasks"].join("<br>")}
             }
           }.style! "min-width": "#{c < 4 && c > 1 ? 60 : 20}px", "padding-left": "2px", "flex-basis": :auto
@@ -56,7 +56,7 @@ def main
     
     self << WorkOrders.new(d)
     
-    div(id: :create).style! "z-index": 100
+    div(id: :popup).style! "z-index": 100
     
     script() {
       """
@@ -64,33 +64,55 @@ def main
     return document.getElementById(i);
   }
   function submit_workorder() {
-    id('create').style.display='none';
+    id('popup').style.display='none';
   }
   function cancel_create_workorder() {
-    id('create').style.display='none';
+    id('popup').style.display='none';
   }  
+  function delete_workorder() {
+    id('popup').style.display='none';
+  }  
+  function close_workorder() {
+    id('popup').style.display='none';
+  }  
+  function update_workorder() {
+    id('popup').style.display='none';
+  }      
+
   
   function popup() {
-fetch('/create/workorder?description='+encodeURI(id('new').value))
-  .then((response) => {
-    return response.text();
-  })
-  .then((html) => {
-    c=document.getElementById('create');
-    c.outerHTML = html;
-  });
+    fetch('/create/workorder?description='+encodeURI(id('new').value))
+    .then((response) => {
+      return response.text();
+    })
+    .then((html) => {
+      c=document.getElementById('popup');
+      c.outerHTML = html;
+    });
   }
 
   id('new').addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
         event.preventDefault();
+        id('new').blur();
         popup();
         id('new').value = '';
 
         
         // Do more work
     }
-});
+  });
+ 
+    function view(id) {
+		fetch('/view/workorder/'+id)
+		.then((response) => {
+		  return response.text();
+		})
+		.then((html) => {
+		  c=document.getElementById('popup');
+		  c.outerHTML = html;
+		});
+    }
       """
     }
   }

@@ -1,14 +1,14 @@
 require "./build.rb"
+require 'json'
 
 
-
-def build
+def build(order)
   Node.new(:div, id: :popup) {
     self << '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
     
     self << FlexTable.new() {
       row() {
-        "Create Work Order"
+        "Work Order #{order["order"]}"
       }.style! color: :azure, "background-color": :darkblue
   
       row() {
@@ -16,15 +16,15 @@ def build
           "ASAP",
           "EMRG",
           "SCHD",
-        ])
+        ], value: order["priority"])
         
         self << DataList.new(label: "TYPE", options: [
           "PM",
           "SAFETY",
           "REACT",
-        ])
+        ], value: order["type"])
 
-        self << DataList.new(label: "Dept", options: [
+        self << DataList.new( value: order["dept"], label: "Dept", options: [
           "Packaging",
           "Manufacturing",
           "Thinbrick",
@@ -41,42 +41,50 @@ def build
           "PM",
           "SAFETY",
           "REACT",
-        ])
+        ], value: order["equip"])
 
-      }.style! flex: 0
+      }.style! flex: 0, "min-height": "fit-content"
+      
       row() {
-        gets
+        order["date"]
+      }.style! flex: 0, "min-height": "fit-content"
+      
+      row() {
+        order["description"]
       }.style! flex: 1, border: "solid 1px rosybrown"
-        div() {
-          self << DataList.new(value: "", label: "Craft", options: [
-            "ELEC",
-            "MECH",
-            "CTRL",
-            "CNTR"
-          ]).style!(flex:1)
-          self << DataList.new(label: "Task", options: [
-            "ELEC",
-            "MECH",
-            "CTRL",
-            "CNTR"
-          ]).style!(flex:1)
-          button(){
-            "Add"
-          }.style! height: "fit-content",flex: 0  
-        }.style! display: :flex, "flex-direction": "row", flex: 0
-      self << List.new(header: ["Craft", "Description"], columns: [0, 1] ,data: []) {
+      
+      div() {
+        self << DataList.new(value: "", label: "Craft", options: [
+          "ELEC",
+          "MECH",
+          "CTRL",
+          "CNTR"
+        ]).style!(flex:1)
+        self << DataList.new(value: "", label: "Task", options: [
+          "ELEC",
+          "MECH",
+          "CTRL",
+          "CNTR"
+        ]).style!(flex:1)
+        button(){
+          "Add"
+        }.style! height: "fit-content",flex: 0  
+      }.style! display: :flex, "flex-direction": "row", flex: 0,"min-height": "fit-content"
+
+      self << List.new(header: ["Craft", "Description"], columns: [0, 1] ,data: order["tasks"]) {
         this=self
         render do |_,r,c|
           ele(:div) {
             next _ if r < 0
             span {_}
-          }
+          }.style!("min-width": "60px")
         end
       }
       
       row() {
-        button(onclick: "submit_workorder()") {"Submit"}
-        button(onclick: "cancel_create_workorder()") {"Cancel"}
+        button(onclick: "delete_workorder()") {"Delete"}
+        button(onclick: "close_workorder()") {"Close"}
+        button(onclick: "update_workorder()") {"Update"}
       }
       
   
@@ -89,4 +97,4 @@ def build
   }.style! height: "100vh", width: "100vw", position: :fixed, top: 0, left: 0, "background-color": "rgba(39, 55, 77, 0.59)"
 end
 
-puts build
+puts build(JSON.parse(gets))

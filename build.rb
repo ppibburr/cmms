@@ -162,7 +162,7 @@ class List < FlexTable
           e.style! "background-color": "darkblue", color: :azure
           self << e
         end
-      }.style! flex: 0)
+      }.style!(flex: 0, "min-height": "fit-content"))
       self << (
         FlexRow.new() {
           self << (FlexTable.new() {
@@ -207,5 +207,35 @@ class List < FlexTable
 
   def to_s
     super
+  end
+end
+
+class DataList < Node
+  attr_accessor :options, :value
+  def initialize *o, &b
+    label = o[0].delete :label
+    @options = o[0].delete :options
+    @value = o[0].delete :value
+    super :div, *o do
+      this = self
+     
+      t=Time.now.to_f
+     
+      l="view-list-#{t}"
+      
+      div() {
+
+        input(list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:"20px"
+           
+        datalist(id: t) {
+          this.options.each do |o|
+            option(value: o)
+          end
+        }
+      }.style! display: :flex, flex:1
+      
+      instance_exec b.binding, &b if b
+    end
+    style! "flex": 1
   end
 end

@@ -26,12 +26,24 @@ get '/create/workorder' do
   build "create_workorder.rb", params["description"]
 end
 
+get '/view/workorder/:id' do
+  build "view_workorder.rb", get_thing_by_field(:workorders,"order", params[:id].to_i)
+end
+
 get '/api/:thing' do
   DB[params[:thing]].find.to_a.map{|t| from_bson_id(t)}.to_json
 end
 
+def get_thing_by_field thing,fld,val
+  DB[thing].find("#{fld}": val).to_a[0].to_json
+end
+
+def get_thing thing,id
+  from_bson_id(DB[thing].find("_id": to_bson_id(id)).to_a[0]).to_json
+end
+
 get '/api/:thing/:id' do
-  from_bson_id(DB[params[:thing]].find("_id": to_bson_id(params[:id])).to_a[0]).to_json
+  get_thing(params[:thing], params[:id])
 end
 
 post '/api/:thing' do
