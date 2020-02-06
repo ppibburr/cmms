@@ -5,9 +5,9 @@ require 'json'
 
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require 'open3'
-get '/' do
-  Open3.popen3("ruby ./views/workorder.rb") do |i,o,e,w|
-    i.puts DB["workorders"].find.to_a.map{|t| from_bson_id(t)}.to_json
+def build file, data
+  Open3.popen3("ruby ./views/#{file}") do |i,o,e,w|
+    i.puts data
     succ = o.read
     err = e.read
     if err.empty?
@@ -18,8 +18,12 @@ get '/' do
   end
 end
 
-get '/todo' do
-  haml :todo, :attr_wrapper => '"', :locals => {:title => 'MongoDB Backed TODO App'}
+get '/' do
+  build "workorder.rb", DB["workorders"].find.to_a.map{|t| from_bson_id(t)}.to_json
+end
+
+get '/create/workorder' do
+  build "create_workorder.rb", params["description"]
 end
 
 get '/api/:thing' do
@@ -27,7 +31,7 @@ get '/api/:thing' do
 end
 
 get '/api/:thing/:id' do
-  from_bson_id(DB[params[:thing]].find_one(to_bson_id(params[:id]))).to_json
+  from_bson_id(DB[params[:thing]].find("_id": to_bson_id(params[:id])).to_a[0]).to_json
 end
 
 post '/api/:thing' do
@@ -40,7 +44,7 @@ end
 
 delete '/api/:thing/:id' do
   DB[params[:thing]].delete_one('_id' => to_bson_id(params[:id]))
-  ""
+  {delete: params[:id]}.to_json
 end
 
 put '/api/:thing/:id' do

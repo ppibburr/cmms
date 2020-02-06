@@ -6,7 +6,7 @@ class WorkOrders < FlexTable
       div() {
         img(src: "/img/gg-logo.jpg").style! display: :"inline-block"
         h3 {"work orders"}.style! display: :"inline-block"
-        input(type: :text, placeholder: "What needs done?").style! display: :block, "font-size": "x-large"
+        input(id: :new, type: :text, placeholder: "What needs done?").style! display: :block, "font-size": "x-large"
         hr
       }.style! flex:0
       
@@ -17,13 +17,13 @@ class WorkOrders < FlexTable
             next _ if c < 4
             
             span() {
-              _["department"]
+              _["dept"]
             }.style! color: :"#009688"
             span() {
-              _["equipment"]
+              _["equip"]
             }.style! color: :"#009688"
             div() {
-              em() {_["task"]}
+              em() {_["tasks"].join("<br>")}
             }
           }.style! "min-width": "#{c < 4 && c > 1 ? 60 : 20}px", "padding-left": "2px", "flex-basis": :auto
         end
@@ -40,28 +40,7 @@ end
 def main
   Node.new(:html) {
     self << '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
-    style {
-      """
-      html, body {
-        margin: 0;
-        padding: 0;
-      }
-      
-      body {
-        text-align: -webkit-center;
-      }
-      
-      .flex-row {
-        display: flex;
-        flex-direction: row;
-      }
-      
-      .flex-table {
-        display: flex;
-        flex-direction: column;
-      }    
-      """
-    }
+    default_style
     
     head() { title {"Hanley CMMS"}}
 
@@ -76,6 +55,44 @@ def main
     end
     
     self << WorkOrders.new(d)
+    
+    div(id: :create).style! "z-index": 100
+    
+    script() {
+      """
+  function id(i) {
+    return document.getElementById(i);
+  }
+  function submit_workorder() {
+    id('create').style.display='none';
+  }
+  function cancel_create_workorder() {
+    id('create').style.display='none';
+  }  
+  
+  function popup() {
+fetch('/create/workorder?description='+encodeURI(id('new').value))
+  .then((response) => {
+    return response.text();
+  })
+  .then((html) => {
+    c=document.getElementById('create');
+    c.outerHTML = html;
+  });
+  }
+
+  id('new').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        popup();
+        id('new').value = '';
+
+        
+        // Do more work
+    }
+});
+      """
+    }
   }
 end
 

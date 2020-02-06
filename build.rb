@@ -54,11 +54,36 @@ def ele t,*o,&b; Node.new(t,*o,&b); end
 
 class Node
   attr_reader :children
-  [:div,:para,:pre,:code, :small, :head, :title, :meta,:h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
+  [:div,:para,:pre,:code, :small, :head, :button,:title, :label,:meta, :datalist,:option,:h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
     define_method t do |*o,&b|
       (@children ||= []) << e=ele(t,*o,&b)
       @children.last
     end
+  end
+  
+  def default_style
+style {
+      """
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      
+      body {
+        text-align: -webkit-center;
+      }
+      
+      .flex-row {
+        display: flex;
+        flex-direction: row;
+      }
+      
+      .flex-table {
+        display: flex;
+        flex-direction: column;
+      }    
+      """
+    }  
   end
   
   def list *o,&b
