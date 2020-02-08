@@ -47,7 +47,7 @@ def build(order)
       
       row() {
         order["date"]
-      }.style! flex: 0, "min-height": "fit-content"
+      }.style! flex: 0, "min-height": "fit-content", 'font-family': :monospace
       
       row() {
         order["description"]
@@ -77,24 +77,22 @@ def build(order)
           ele(:div) {
             next _ if r < 0
             span {_}
-          }.style!("min-width": "60px")
+          }.style!("min-width": 60.px).style! 'font-family': :monospace
         end
       }
       
       row() {
         button(onclick: "delete_workorder()") {"Delete"}
-        button(onclick: "close_workorder()") {"Close"}
+        button(onclick: "do_close()") {"Close"}
         button(onclick: "update_workorder()") {"Update"}
       }
       
   
-    }.style!("min-height": "60vh", "max-height": "60vh", "min-width":"76vw", margin: "20% 12% 20% 12%","border": "solid 1px darkblue", "background-color": "aliceblue")
-  
+    }.add_class("popup")
     
-  
     default_style
     
-  }.style! height: "100vh", width: "100vw", position: :fixed, top: 0, left: 0, "background-color": "rgba(39, 55, 77, 0.59)"
+  }.style! display: :unset
 end
 
 puts build(JSON.parse(gets))

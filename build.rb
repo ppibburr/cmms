@@ -1,3 +1,15 @@
+class Numeric
+  [:vw,:vh,:px,:em,:rem].each do |m|
+    define_method m do
+      "#{self}#{m}"
+    end
+  end
+  
+  def pct
+    "#{self}%"
+  end
+end
+
 class Node
   def id; self["id"] end
   def id= i; self["id"] = i end
@@ -8,6 +20,12 @@ class Node
     @attributes = {}
     @tag = tag
     attr.each do |k,v| self[k]=v end
+    
+    if self.class.classname
+      self.class.ancestors.each do |a|
+        add_class a.classname if a.respond_to?(:classname) && a.classname 
+      end
+    end
     
     @b=b
   end
@@ -48,6 +66,26 @@ class Node
   def + o
     to_s+o.to_s
   end
+  
+  [:border,:border_color,:border_radius,:border_style,:z_index,:color,:background_color,:flex_direction,:flex,:min_height,:max_height,:display,:margin,:padding,:position,:top,:left,:right,:bottom].each do |m|
+    define_method m do |*o|
+      (@style||=Style.new)[m.to_s.split("_").join("-")] = o.join(" ")
+      self
+    end
+  end
+  
+  def self.style h=nil
+    (@style||=Style.new)
+    return @style unless h
+    h.each_pair {|k,v|
+      @style[k] = v
+    }
+  end
+  
+  def self.classname n=nil
+    return @classname unless n
+    @classname = n
+  end
 end
 
 def ele t,*o,&b; Node.new(t,*o,&b); end
@@ -61,8 +99,68 @@ class Node
     end
   end
   
+  def default_script
+    script() {
+    """
+  function popup(u) {
+    fetch(u)
+    .then((response) => {
+      return response.text();
+    })
+    .then((html) => {
+      c=id('popup');
+      c.outerHTML = html;
+    });
+  }    
+    
+  function id(i) {
+    return document.getElementById(i);
+  }
+
+  function select(s) {
+    return document.querySelectorAll(s);
+  }    
+  
+  function do_close() {
+    id('popup').style.display='none';
+  }
+  
+     function filter(e,_id) {
+      e.blur();
+      list = select('#'+_id+' .row');  
+      for(i=0;i<list.length;i++){
+        var id;
+        console.log(document.querySelector(id='#'+e.id+' input').value);
+        console.log([id,_id]);
+        if (!list[i].innerText.includes(document.querySelector(id).value)) {
+          list[i].style.display = 'none';
+          
+        } else {
+          list[i].style.display ='';
+        }
+      }
+    }
+
+
+    
+    function setup_filters(filters, _id) {
+		filters.forEach(function(i) {
+		  e=id(i);
+		  e.addEventListener('keydown', function(event) {
+			if (event.key === 'Enter') {
+			  //event.preventDefault();
+			  filter(this, _id);
+			}    
+			// Do more work
+		  });
+		});    
+    } 
+    """
+    }
+  end
+  
   def default_style
-style {
+    style {
       """
       html, body {
         margin: 0;
@@ -70,18 +168,57 @@ style {
       }
       
       body {
-        text-align: -webkit-center;
+        /*text-align: -webkit-center;*/
+        background-color: floralwhite;
       }
       
       .flex-row {
         display: flex;
         flex-direction: row;
+        flex-basis: auto;
+
+      }
+      
+      .list-header input::placeholder {
+        color:azure;
+      }
+      .list-header input {
+       background-color: darkblue;
       }
       
       .flex-table {
         display: flex;
         flex-direction: column;
       }    
+      
+#popup {      
+          -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1s; /* Firefox < 16 */
+        -ms-animation: fadein 1s; /* Internet Explorer */
+         -o-animation: fadein 1s; /* Opera < 12.1 */
+            animation: fadein 1s;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0; left: 0;
+  background-color: rgba(39, 55, 77, 0.59);
+  display: none;
+  z-index: 100;            
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.popup {
+  flex:0;
+  min-height: 60vh;
+  max-height: 60vh;
+  margin: 20vh 12vw;
+  border: solid 1px darkblue;
+  background-color: aliceblue;
+}
       """
     }  
   end
@@ -142,6 +279,7 @@ class FlexTable < Node
 end
 
 class List < FlexTable
+  attr_accessor :row_height, :colors
   def initialize *o,&b
     t=:div
     h=(o[0] ||= {})
@@ -149,6 +287,8 @@ class List < FlexTable
     data    = h.delete :data
     columns = h.delete :columns
     header  = h.delete :header
+    @colors = h.delete :colors
+    @row_height  = h.delete :row_height || :auto
     grd = h.has_key?(:grow_rows)
     gr = h.delete(:grow_rows)
     grow_rows = grd && (gr == true) 
@@ -158,25 +298,37 @@ class List < FlexTable
       this=self    
       self << (FlexRow.new() {
         this.header.each_with_index do |v,i|
-          e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0), "flex-shrink": 0)
-          e.style! "background-color": "darkblue", color: :azure
-          self << e
+         
+            e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0), "flex-shrink": 0)
+            e.style! "background-color": "darkblue", color: :azure, "padding-left":2.px
+            e.add_class "list-header"
+            self << e
+          
         end
       }.style!(flex: 0, "min-height": "fit-content"))
       self << (
         FlexRow.new() {
           self << (FlexTable.new() {
 			this.data.each_with_index do |r,i|
-			  row() {
+			 _r=row(class:'row') {
 				r.each_with_index do |cell,ii|
 				  
-				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0), "flex-shrink": 0))
+				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0), "flex-shrink": 0,"padding-left":2.px))
 				end
-			  }.style! flex: this.grow_rows? ? 1 : 0, "border-bottom": "solid 1px rosybrown"
+			  }.style! flex: this.grow_rows? ? 1 : 0, "border-bottom": "solid 1px rosybrown",height: this.row_height
+			  if this.colors
+			    if i.even?
+			      _r.style! "background-color": (this.colors[1] || this.colors[0])
+			    else
+			      _r.style! "background-color": this.colors[0]
+			    end
+			  end
+			  ""
 			end
-		  }.style!(flex: 1))
-		}.style! flex: 1,overflow: :auto, position: :relative
+		  }.style!(flex: 1, overflow: :auto, position: :auto))
+		}.style!(flex: 1,height:100.px,"flex-basis": :auto)
       )
+      
       ""
     end
      
@@ -189,6 +341,7 @@ class List < FlexTable
     @data    = data    || []
   
     @grow_rows = grow_rows
+    add_class 'list'
   end
   
   attr_accessor :grow_rows
@@ -225,7 +378,7 @@ class DataList < Node
       
       div() {
 
-        input(list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:"20px"
+        input(list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:20.px
            
         datalist(id: t) {
           this.options.each do |o|
@@ -236,6 +389,7 @@ class DataList < Node
       
       instance_exec b.binding, &b if b
     end
-    style! "flex": 1
+    
+    style! flex: 1
   end
 end

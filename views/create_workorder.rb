@@ -69,7 +69,7 @@ def build
         render do |_,r,c|
           ele(:div) {
             next _ if r < 0
-            span {_}
+            span {_}.style! 'font-family': :monospace
           }
         end
       }
@@ -80,7 +80,7 @@ def build
       }
       
   
-    }.style!("min-height": "60vh", "max-height": "60vh", "min-width":"76vw", margin: "20% 12% 20% 12%","border": "solid 1px darkblue", "background-color": "aliceblue")
+    }.style!("min-height": "60vh", "max-height": "60vh", "min-width":"76vw", margin: "20bh 12vw","border": "solid 1px darkblue", "background-color": "aliceblue")
   
     
   
