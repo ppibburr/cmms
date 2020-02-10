@@ -6,7 +6,7 @@ require 'json'
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require 'open3'
 def build file, data
-  Open3.popen3("ruby ./views/#{file}") do |i,o,e,w|
+  Open3.popen3("RUBYOPT=-W0 ruby ./views/#{file}") do |i,o,e,w|
     i.puts data
     succ = o.read
     err = e.read

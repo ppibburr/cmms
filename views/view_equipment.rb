@@ -8,6 +8,7 @@ puts(Node.new(:div) {
   self << FlexTable.new() {
     row() {
       img(src: "/img/gg-logo.jpg") {}.style! margin: :auto
+      span(onclick: "window.close()") {"X"}.add_class("close-button")
     }.style! flex: 0,"background-color": :white
     row() {
       "Equipment ID: #{d["order"].to_s}"
@@ -111,7 +112,7 @@ puts(Node.new(:div) {
       }
     }
 
-  }.style!(flex:0, "background-color": "azure", color: "darkblue","min-height": "100vh", "max-height": "100vh", width: "55vw", "min-width": "358px",margin: :auto, border: "solid 1px")
+  }.style!(flex:0, "background-color": "azure","min-height": "100vh", "max-height": "100vh", width: "55vw", "min-width": "358px",margin: :auto, border: "solid 1px")
 
   div(id: "popup") {
   

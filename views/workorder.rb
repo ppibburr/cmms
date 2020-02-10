@@ -13,6 +13,7 @@ class WorkOrders < FlexTable
     
       div() {
         img(src: "/img/gg-logo.jpg").style! display: :"inline-block"
+        span(onclick: "window.close()") {"X"}.add_class("close-button")
         input(id: :new, type: :text, placeholder: "What needs done?").style! display: :block, "font-size": "x-large", "margin-top": 0.2.em 
         hr
       }.style! flex:0, "background-color": :white

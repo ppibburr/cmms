@@ -170,6 +170,7 @@ class Node
       body {
         /*text-align: -webkit-center;*/
         background-color: floralwhite;
+        color: #08084b;
       }
       
       .flex-row {
@@ -287,7 +288,7 @@ class List < FlexTable
     data    = h.delete :data
     columns = h.delete :columns
     header  = h.delete :header
-    @colors = h.delete :colors
+    @colors = [:white, :aliceblue]#elete :colors
     @row_height  = h.delete :row_height || :auto
     grd = h.has_key?(:grow_rows)
     gr = h.delete(:grow_rows)
@@ -300,7 +301,7 @@ class List < FlexTable
         this.header.each_with_index do |v,i|
          
             e=this.render(self, v, -1,i).style!(flex: (columns[i] || 0), "flex-shrink": 0)
-            e.style! "background-color": "darkblue", color: :azure, "padding-left":2.px
+            e.style! "background-color": "darkblue", "padding-left":2.px
             e.add_class "list-header"
             self << e
           
