@@ -7,9 +7,7 @@ data  = obj["data"]
 title = obj["title"]
 view  = obj["view"]
 
-puts(Node.new(:div,id:"popup") {
-  
-  self << FlexTable.new() {
+puts(FlexTable.new() {
     row() {
       title || "Untitled"
     }.style! flex: 0,"background-color": :darkblue, color: :azure
@@ -18,5 +16,4 @@ puts(Node.new(:div,id:"popup") {
   
 
     button(onclick: "do_close()") {"Close"}  
-  }.add_class("popup")
-}.style!(display: 'unset').to_s)
+  }.add_class("popup"))

@@ -11,11 +11,11 @@ class WorkOrders < FlexTable
     
       input(id: :new, type: :text, placeholder: "What needs done?").style! display: :block, "font-size": "x-large", "margin-top": 0.2.em    
       
-      list(grow_rows: true, columns: [0,0,0,0,1], header: ["", :ID, :Urgency, :Type, :Task], data: d) {
+      list(id: 'workorders', grow_rows: true, columns: [0,0,0,0,1], header: ["", :ID, :Urgency, :Type, :Task], data: d) {
         render do |_, r,c|
           ele(:div) {
             if r < 0
-              self << DataList.new(id: "filter#{c+1}",options:fields[c], value:"", label: _)
+              self << DataList.new(filter: 'workorders',options:fields[c], value:"", label: _)
               next
             end
             
@@ -60,9 +60,6 @@ class WorkOrders < FlexTable
 				// Do more work
 			}
 		});
-			
-		filters=['filter2','filter3','filter4','filter5'];
-		setup_filters(filters, 'workorders');
 		  """
 		}      
     end.style! flex:1 

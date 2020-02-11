@@ -50,23 +50,41 @@
 
 .popup {
   flex:0;
-  min-height: 60vh;
-  max-height: 60vh;
-  margin: 20vh 12vw;
-  border: solid 1px darkblue;
+  min-height: 82vh;
+  max-height: 82vh;
+  margin: 10vh 8vw;
+  border: ridge;
+  border-radius: 0.1em;
   background-color: aliceblue;
+  box-shadow: 10px 10px 8px #282020;
+}
+
+.link {
+  min-width: -webkit-fill-available;
 }
 
 .main {
    flex:0;
    background-color: azure; 
    color: darkblue;
-   min-height: 100vh;
-   max-height: 100vh;
-   width: 55vw; 
+   min-height: 98vh;
+   max-height: 98vh;
+   max-height: 98vh;
+   width: 88vw; 
    min-width: 358px;
    margin: auto; 
-   border: solid 1px;
+   box-shadow: 10px 10px 8px #282020;
+
+}
+
+@media only screen and (max-width: 450px) {
+  .main {
+    min-width: 100vw;
+    box-shadow: unset;
+    min-height: 100vh !important;
+    max-height: 100vh;
+
+  }
 }
 
 .list .row:nth-child(odd) {background: azure}

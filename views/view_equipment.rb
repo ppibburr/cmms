@@ -7,7 +7,8 @@ row() {
 }.style! "justify-content": "space-around", "background-color": :white, "border-bottom": "solid 1px"
 
 row() {
-  div() {
+  
+  self << FlexTable.new() {
     div() {
       span() {"Department: "}
       span() {d["department"].to_s}
@@ -17,15 +18,7 @@ row() {
       span() {"Location: "}
       span() {d["location"].to_s}
     }.style! "text-align-last": :justify
-  }.style!(flex: 1, "min-width": "max-content", "font-family": :monospace)
 
-  div() {
-    a(href: "") {"View Inventory Items"}
-  }.style!(flex:1, "text-align": :center)
-}.style!(flex: 0, display: :flex)
-
-row() {
-  div() {
     div() {
       span() {"Downtime YTD:"}
       span() {
@@ -35,15 +28,22 @@ row() {
     }.style! "text-align-last": :justify
 
     div() {
-      span() {"Prev. Yr: "}
+      span() {"Prev.Yr: "}
       span() {"#{d["prev_downtime"]}hrs"}
     }.style! "text-align-last": :justify
-  }.style! flex: 1, "min-width": "max-content", "font-family": :monospace
+  }.style!(flex: 1, "min-width": "max-content", "font-family": :monospace)
 
-  div() {
-    span(class: 'link', onclick: "popup(\"/view/workhistory/#{d["order"]}\")") {"View Work History"}
-  }.style!(flex:1, "text-align": :center)
-}.style! flex: 0,display: :flex
+  self << FlexTable.new() {
+    row() {
+      button(class: 'link', onclick: "popup(\"/view/workhistory/#{d["order"]}\")") {"View Work History"}
+    }.style!(flex:0, "text-align": :center)
+
+    row() {
+      button(class: :link) {"View Inventory Items"}
+    }.style!(flex:0, "text-align": :center)
+  }.style!(padding: 0.8.em, margin: :auto)
+}.style!(flex: 0, "min-width": "max-content", "font-family": :monospace)
+
 
 row() {
   span() {
@@ -67,7 +67,7 @@ row() {
     render do |_,r,c|
       ele(:div) {
         if r < 0
-          self << DataList.new(id: "filter#{c+1}",options:fields[c], value:"", label: _)
+          self << DataList.new(filter: 'tasks',options:fields[c], value:"", label: _)
           next
         end
 

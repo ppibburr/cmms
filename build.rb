@@ -240,21 +240,23 @@ class List < FlexTable
 end
 
 class DataList < Node
-  attr_accessor :options, :value
+  attr_accessor :options, :value, :filter
   def initialize *o, &b
     label = o[0].delete :label
     @options = o[0].delete :options
     @value = o[0].delete :value
+    @filter = o[0].delete :filter
+    o[0][:id] ||= "data-list-#{Time.now.to_f.to_s.split(".").join+rand(10000).to_s}"
     super :div, *o do
       this = self
      
-      t=Time.now.to_f
+      t=self[:id]
      
       l="view-list-#{t}"
       
       div() {
 
-        input(list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:20.px
+        input(onkeydown: "handle_filter(\"#{this.filter}\")", list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:20.px
            
         datalist(id: t) {
           this.options.each do |o|
@@ -262,7 +264,7 @@ class DataList < Node
           end
         }
       }.style! display: :flex, flex:1
-      
+            
       instance_exec b.binding, &b if b
     end
     

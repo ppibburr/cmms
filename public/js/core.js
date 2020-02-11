@@ -1,18 +1,23 @@
+  // Displays the popup id element, populates it with request 'u'
   function popup(u) {
+    id('popup').style.display='block';
+    
     fetch(u)
     .then((response) => {
       return response.text();
     })
     .then((html) => {
       c=id('popup');
-      c.outerHTML = html;
+      c.innerHTML = html;
     });
   }    
     
+  // returns an element with the id 'id'  
   function id(i) {
     return document.getElementById(i);
   }
 
+  // list of elements matching selector 's'
   function select(s) {
     return document.querySelectorAll(s);
   }    
@@ -20,15 +25,14 @@
   function do_close() {
     id('popup').style.display='none';
   }
-  
+    
+     // filter list of id 'id' against contents of e
      function filter(e,_id) {
-      e.blur();
+      //e.blur();
       list = select('#'+_id+' .row');  
       for(i=0;i<list.length;i++){
-        var f;
-        console.log(document.querySelector(f='#'+e.id+' input').value);
-        console.log([f,_id]);
-        if (!list[i].innerText.includes(document.querySelector(f).value)) {
+        console.log([e.id,_id, list]);
+        if (!list[i].innerText.includes(e.value)) {
           list[i].style.display = 'none';
           
         } else {
@@ -37,17 +41,11 @@
       }
     }
 
-
-    
-    function setup_filters(filters, _id) {
-		filters.forEach(function(i) {
-		  e=id(i);
-		  e.addEventListener('keydown', function(event) {
-			if (event.key === 'Enter') {
+    // conenct the enter key to input datalists used as a column header
+    function handle_filter(list) {
+		  console.log('filter: '+list);
+          if (event.key === 'Enter') {
 			  //event.preventDefault();
-			  filter(this, _id);
-			}    
-			// Do more work
-		  });
-		});    
+			  filter(event.target, list);
+		  }        
     } 
