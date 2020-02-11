@@ -1,0 +1,73 @@
+
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      
+      body {
+        /*text-align: -webkit-center;*/
+        background-color: floralwhite;
+      }
+      
+      .flex-row {
+        display: flex;
+        flex-direction: row;
+        flex-basis: auto;
+
+      }
+      
+      .list-header input::placeholder {
+        color:azure;
+      }
+      .list-header input {
+       background-color: darkblue;
+      }
+      
+      .flex-table {
+        display: flex;
+        flex-direction: column;
+      }    
+      
+#popup {      
+          -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+       -moz-animation: fadein 1s; /* Firefox < 16 */
+        -ms-animation: fadein 1s; /* Internet Explorer */
+         -o-animation: fadein 1s; /* Opera < 12.1 */
+            animation: fadein 1s;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0; left: 0;
+  background-color: rgba(39, 55, 77, 0.59);
+  display: none;
+  z-index: 100;            
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.popup {
+  flex:0;
+  min-height: 60vh;
+  max-height: 60vh;
+  margin: 20vh 12vw;
+  border: solid 1px darkblue;
+  background-color: aliceblue;
+}
+
+.main {
+   flex:0;
+   background-color: azure; 
+   color: darkblue;
+   min-height: 100vh;
+   max-height: 100vh;
+   width: 55vw; 
+   min-width: 358px;
+   margin: auto; 
+   border: solid 1px;
+}
+
+.list .row:nth-child(odd) {background: azure}
+.list .row:nth-child(even) {background: aliceblue}

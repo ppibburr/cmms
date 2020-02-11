@@ -7,7 +7,7 @@ DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require 'open3'
 def build file, data
   Open3.popen3("RUBYOPT=-W0 ruby ./views/#{file}") do |i,o,e,w|
-    i.puts data
+    i.puts data.to_json
     succ = o.read
     err = e.read
     if err.empty?
@@ -19,35 +19,35 @@ def build file, data
 end
 
 get '/' do
-  build "main.rb", {}.to_json
+  build "page.rb", {"view": "main.rb", "title": "Home", "data": {}}
 end
 
 get '/view/workorders' do
-  build "workorder.rb", DB["workorders"].find.to_a.map{|t| from_bson_id(t)}.to_json
+  build "page.rb", {"view": "workorder.rb", title: "Work Orders", "data": DB["workorders"].find.to_a.map{|t| from_bson_id(t)}}
 end
 
 get '/create/workorder' do
-   build "view_workorder.rb", {date: Time.now.to_s,description: params["description"]}.to_json
+   build "popup.rb", view: "view_workorder.rb", title: "Create Work Order", data: {date: Time.now.to_s,description: params["description"]}
 end
 
 get '/view/workorder/:id' do
-  build "view_workorder.rb", get_thing_by_field(:workorders,"order", params[:id].to_i)
+  build "popup.rb", view: "view_workorder.rb", title: "Work Order: #{params[:id]}", data: get_thing_by_field(:workorders,"order", params[:id].to_i)
 end
 
 get "/view/departments" do
-  build "view_departments.rb", {}
+  build "popup.rb", {"view": "view_departments.rb", title: "Department List", data:{}}
 end
 
 get "/view/department/:dept" do
-  build "view_department.rb", {department: params[:dept], equipment: find_thing(:equipment, "department": params[:dept])}.to_json
+  build "popup.rb", {view: "view_department.rb", title: "#{params[:dept]} Equipment List", data: {department: params[:dept], equipment: find_thing(:equipment, "department": params[:dept])}}
 end
 
 get '/view/equipment/:id' do
-  build "view_equipment.rb", get_thing_by_field(:equipment,"order", params[:id].to_i)
+  build "page.rb", {"view": "view_equipment.rb", title: "Equipment #{params[:id]}", data: get_thing_by_field(:equipment,"order", params[:id].to_i)}
 end
 
 get '/view/workhistory/:id' do
-  build "view_work_history.rb", get_thing_by_field(:equipment,"order", params[:id].to_i)
+  build "popup.rb", {"view": "view_work_history.rb", title: "Equipment ID: #{params[:id]} Work History", "data": get_thing_by_field(:equipment,"order", params[:id].to_i)}
 end
 
 get "/api/workorder_types" do
@@ -99,11 +99,11 @@ get '/api/:thing' do
 end
 
 def get_thing_by_field thing,fld,val
-  DB[thing].find("#{fld}": val).to_a[0].to_json
+  DB[thing].find("#{fld}": val).to_a[0]
 end
 
 def get_thing thing,id
-  from_bson_id(DB[thing].find("_id": to_bson_id(id)).to_a[0]).to_json
+  from_bson_id(DB[thing].find("_id": to_bson_id(id)).to_a[0])
 end
 
 def find_thing thing, h={}
@@ -118,7 +118,7 @@ get "/api/find/:thing" do
 end
 
 get '/api/:thing/:id' do
-  get_thing(params[:thing], params[:id])
+  get_thing(params[:thing], params[:id]).to_json
 end
 
 post '/api/:thing' do
