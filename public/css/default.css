@@ -85,6 +85,17 @@
     max-height: 100vh;
 
   }
+
+.popup {
+  flex:0;
+  min-height: 100vh;
+  max-height: 100vh;
+  margin: unset;
+  border: unset;
+  border-radius: 0.1em;
+  background-color: aliceblue;
+  box-shadow: unset;
+}
 }
 
 .list .row:nth-child(odd) {background: azure}

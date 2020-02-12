@@ -231,7 +231,12 @@ class List < FlexTable
 
   def render t=nil, d=nil,r=nil,c=nil, &b
     return (@render = b) if b
-    t.instance_exec(d,r,c, &@render) if @render
+    
+    @render ||= proc do |*o|
+      span() {o[0]}
+    end
+    
+    t.instance_exec(d,r,c, &@render)
   end
 
   def to_s
@@ -270,4 +275,30 @@ class DataList < Node
     
     style! flex: 1
   end
+end
+
+require 'open3'
+require 'json'
+
+def rbml view, data
+  Open3.popen3("RUBYOPT=-W0 ruby -rjson -r./build ./views/#{view}") do |i,o,e,w|
+    i.puts data.to_json
+    succ = o.read
+    err = e.read.split("\n")
+    if err.empty?
+     succ
+    elsif view != "error.rb"
+      rbml("error.rb", {"error": err[0], "backtrace": err[1..-1]})
+    else
+      "<div style='background-color: white;color:black;'>"+
+      err[0]+
+      err[1..-1].reverse.join("<br>")+
+      "</div>"
+    end 
+  end
+rescue => err
+      "<div style='background-color: white;color:black;'>"+
+      err.to_s+
+      err.backtrace.reverse.join("<br>")+
+      "</div>"
 end

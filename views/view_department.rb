@@ -17,7 +17,7 @@ row() {
 		  next
 		end
 		span(onclick: "window.open(\"/view/equipment/#{data["equipment"][r]["order"]}\", \"equipment\")") {_}
-	  }.style!('min-width': c < 1 ? 20.px : 50.px).style! 'font-family': :monospace
+	  }.style!('min-width': c < 1 ? 20.px : 50.px).style! 'font-family': :monospace, cursor: :pointer
 	end
   }
 }.style! flex:1

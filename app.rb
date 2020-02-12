@@ -4,18 +4,10 @@ require 'mongo'
 require 'json'
 
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
-require 'open3'
-def build file, data
-  Open3.popen3("RUBYOPT=-W0 ruby ./views/#{file}") do |i,o,e,w|
-    i.puts data.to_json
-    succ = o.read
-    err = e.read
-    if err.empty?
-     succ
-    else
-      err.gsub("\n","<br>")
-    end 
-  end
+require './build'
+
+def build view, data
+  rbml view, data
 end
 
 get '/' do

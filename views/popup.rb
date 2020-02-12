@@ -9,11 +9,14 @@ view  = obj["view"]
 
 puts(FlexTable.new() {
     row() {
-      title || "Untitled"
-    }.style! flex: 0,"background-color": :darkblue, color: :azure
+      span() {title || "Untitled"}
+      img(src: "/img/close.png", onclick: 'do_close()').style! height:1.em
+    }.style! flex: 0,"background-color": "#a090af", color: 'black', 'justify-content': 'space-between'
 
-    eval(open("./views/#{view}").read)
-  
-
-    button(onclick: "do_close()") {"Close"}  
+    begin
+      eval(open("./views/"+view).read)
+    rescue => e
+      self << rbml("error.rb", {error: e.to_s, backtrace: e.backtrace})
+    end
+   #button(onclick: "do_close()") {"Close"}  
   }.add_class("popup"))

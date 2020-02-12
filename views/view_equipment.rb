@@ -31,7 +31,11 @@ row() {
       span() {"Prev.Yr: "}
       span() {"#{d["prev_downtime"]}hrs"}
     }.style! "text-align-last": :justify
-  }.style!(flex: 1, "min-width": "max-content", "font-family": :monospace)
+  }.style!(flex: 0, "min-width": "max-content", "font-family": :monospace)
+
+  div() {
+  ""
+  }.style! flex:1
 
   self << FlexTable.new() {
     row() {
@@ -71,7 +75,7 @@ row() {
           next
         end
 
-        span {_}
+        span {_}.style! cursor: :pointer
       }.style!("min-width": 60.px).style! 'font-family': :monospace
     end
   }

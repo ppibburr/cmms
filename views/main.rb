@@ -1,17 +1,28 @@
 row() {
-  span( onclick: "window.open(\"/view/workorders\",\"workorders\")") {
-	"Work Orders"
-  }.style! margin: :auto, 'min-height': 2.em, 'padding-top': 1.em
-}  
+  div(onclick: "window.open(\"/view/workorders\",\"workorders\")"){
+    img(src: '/img/wo.png').style! width:3.em
+    h2() {
+	  "Work Orders"
+    }.style! 'vertical-align': :top
+  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
+}.style! flex: 1    
 
 row() {
-  span( onclick: "popup(\"/view/departments\")") {
-	"Equipment"
-  }.style! margin: :auto, 'min-height': 2.em, 'padding-top': 1.em
-} 
+  div(onclick: "popup(\"/view/departments\")"){
+    img(src: '/img/equip.svg').style! width:3.em
+    h2() {
+	  "Equipment"
+    }.style! 'vertical-align': :top
+  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
+}.style! flex: 1   
 
 row() {
-  a(href:"#", onclick: "/view/inventory") {
-	"Inventory"
-  }.style! margin: :auto, 'min-height': 2.em, 'padding-top': 1.em
-}         
+  div(onclick: "popup(\"/view/inventory\")") {
+    img(src: '/img/inv.png').style! width:3.em
+    h2() {
+	  "Inventory"
+    }.style! 'vertical-align': :top
+  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
+}.style! flex: 1
+
+row() {}.style! flex:1         
