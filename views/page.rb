@@ -17,7 +17,7 @@ puts(Node.new(:html) {
     script(src: "/js/core.js")  
   } 
 
-  self << FlexTable.new() {
+  self << FlexTable.new(id: :page) {
     row() {
       img(src: "/img/gg-logo.jpg") {}.style! margin: :auto
       span(onclick: "window.close()") {"X"}.add_class("close-button")

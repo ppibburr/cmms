@@ -43,6 +43,10 @@
   z-index: 100;            
 }
 
+#popup:target {
+  display:block;
+}
+
 @keyframes fadein {
     from { opacity: 0; }
     to   { opacity: 1; }
@@ -67,14 +71,15 @@
    flex:0;
    background-color: azure; 
    color: darkblue;
-   min-height: 98vh;
+   min-height: 92vh;
    max-height: 98vh;
    max-height: 98vh;
    width: 88vw; 
    min-width: 358px;
-   margin: auto; 
+   margin: 4vh 6vw; 
    box-shadow: 10px 10px 8px #282020;
-
+   border-top: solid 1px #cecece;
+   border-left: solid 1px #cecece;
 }
 
 @media only screen and (max-width: 450px) {
@@ -83,7 +88,8 @@
     box-shadow: unset;
     min-height: 100vh !important;
     max-height: 100vh;
-
+    margin: unset;
+    border: unset;
   }
 
 .popup {
