@@ -31,7 +31,9 @@ class WorkOrders < FlexTable
             
             div(onclick: "popup(\"/view/workorder/#{_["order"]}\")") {
               em() {
-                _["tasks"].map do |t| 
+                _["tasks"].map do |t|
+                 
+                  t=[t["craft"],t["description"]]
                   div() {
                     span() {t[0]+": "}.style! flex: 0
                     span() {t[1]}.style! flex: 1

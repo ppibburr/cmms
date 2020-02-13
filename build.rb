@@ -251,19 +251,19 @@ class DataList < Node
     @options = o[0].delete :options
     @value = o[0].delete :value
     @filter = o[0].delete :filter
-    o[0][:id] ||= "data-list-#{Time.now.to_f.to_s.split(".").join+rand(10000).to_s}"
+    o[0][:id] ||= "data-list-#{t=Time.now.to_f.to_s.split(".").join+rand(10000).to_s}"
     super :div, *o do
       this = self
      
-      t=self[:id]
      
-      l="view-list-#{t}"
+     
+      l="dl-#{t}"
       
       div() {
 
-        input(onkeydown: "handle_filter(\"#{this.filter}\")", list: t, id: l, placeholder: label, value: this.value || "").style! flex:1, width:20.px
+        input(onkeydown: "handle_filter(\"#{this.filter}\")", list: l, id: "input-#{t}", placeholder: label, value: this.value || "").style! flex:1, width:20.px
            
-        datalist(id: t) {
+        datalist(id: l) {
           this.options.each do |o|
             option(value: o)
           end

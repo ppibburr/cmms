@@ -45,7 +45,7 @@
     function handle_filter(list) {
 		  console.log('filter: '+list);
           if (event.key === 'Enter') {
-			  //event.preventDefault();
+			  event.preventDefault();
 			  filter(event.target, list);
 		  }        
     } 

@@ -61,7 +61,7 @@ div() {
   }.style! height: "fit-content",flex: 0  
 }.style! display: :flex, "flex-direction": "row", flex: 0,"min-height": "fit-content"
 
-self << List.new(header: ["Craft", "Description"], columns: [0, 1] ,data: data["tasks"]) {
+self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0, 1] ,data: data["tasks"].map do |t| [t["interval"],t["craft"], t["description"]] end) {
   this=self
   render do |_,r,c|
     ele(:div) {
