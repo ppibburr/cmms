@@ -1,7 +1,6 @@
   // Displays the popup id element, populates it with request 'u'
   function popup(u) {
-    id('popup').style.display='block';
-    
+    window.location = "#popup";
     fetch(u)
     .then((response) => {
       return response.text();
@@ -23,7 +22,7 @@
   }    
   
   function do_close() {
-    id('popup').style.display='none';
+    window.location = "#page";
   }
     
      // filter list of id 'id' against contents of e
