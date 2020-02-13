@@ -26,7 +26,7 @@ class WorkOrders < FlexTable
             }.style! color: :"#009688"
             
             span() {
-              _["equip"]
+              find(:equipment,order: _["equip"])[0]["name"]
             }.style! color: :"#009688"
             
             div(onclick: "popup(\"/view/workorder/#{_["order"]}\")") {

@@ -26,11 +26,7 @@ row() {
     "Parking"
   ])
 
-  self << DataList.new(label: "Equip", options: [
-    "PM",
-    "SAFETY",
-    "REACT",
-  ], value: order["equip"])
+  self << DataList.new(label: "Equip", options: find(:equipment, department: order["dept"]).map do |e| e["name"] end, value: find(:equipment, order: order["equip"])[0]["name"])
 }.style! flex: 0, "min-height": "fit-content"
 
 row() {
