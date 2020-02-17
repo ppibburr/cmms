@@ -133,3 +133,81 @@ end
 
 def to_bson_id(id) BSON::ObjectId.from_string(id) end
 def from_bson_id(obj) obj.merge({'_id' => obj['_id'].to_s}) end
+
+
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'sinatra'
+require 'haml'
+
+$pwd = "/home/i3/km-does"
+
+def file_listing(directory)
+  Dir.glob(directory + '/*')
+end
+
+get '/upload' do
+  haml :upload
+end
+
+post '/upload' do 
+  puts file = params[:file]
+  puts filename = file[:filename]
+  tempfile = file[:tempfile]
+  File.open(File.join($pwd, filename), 'w') {|f| f.write tempfile.read}
+  redirect '/browse'
+end
+
+get '/download/:filename' do |filename|
+  file = File.join($pwd, filename)
+  send_file(file, :disposition => 'attachment')
+end
+
+get '/browse' do
+  @files = file_listing($pwd)
+  haml :index
+end
+
+get '/bfile.rb' do
+  file = File.join($pwd, 'bfile.rb')
+  send_file(file, :disposition => 'attachment')
+end
+
+get '/system' do
+  if $download_file
+    file = File.join($pwd, $download_file)
+    send_file(file, :disposition => 'attachment')
+  else
+    redirect '/browse'
+  end
+end
+
+__END__
+
+@@ layout
+%html
+  %a{:href => '/browse'}Browse Files
+  %a{:href => '/upload'}Upload a File
+  = yield
+  
+
+@@ index
+%h1 File Server
+%table
+  %tr
+    %th File
+    %th Size
+  - for file in @files
+    - if File.file?(file)
+      %tr
+        %td
+          %a{:title => file, :href => '/download/' + File.basename(file)}=File.basename(file)
+        %td= File.size(file).to_s + "b"
+
+@@upload
+%h1 Upload
+
+%form{:action=>"/upload",:method=>'post',:enctype=>"multipart/form-data"}
+  %input{:type => "file",:name => "file"}
+  %input{:type => "submit",:value => "Upload"}
