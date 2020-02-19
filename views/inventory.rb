@@ -13,6 +13,10 @@
   end
   
   row() {
+    span() {"Hanley Inventory Items"}
+  }.style! flex: 0
+  
+  row() {
     div() {
       span(class: :total_cost) {"Total Inventory Cost: "}
       b() {
@@ -51,7 +55,7 @@
         
         s=span {_}.style! cursor: :pointer,'text-overflow': :ellipsis
         s.style! color: :red if c == 2
-      }.style!("min-width": q.px,"text-align": qq)#.style! 'font-family': :monospace
+      }.style!("min-width": q.px,"text-align": qq).style! 'font-family': :monospace, cursor: :pointer
     end
   }
 

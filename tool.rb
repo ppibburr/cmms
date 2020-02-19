@@ -1,10 +1,26 @@
-
+require 'json'
 
 if ARGV[0]
 require 'pry'
+begin
+  pids = JSON.parse(File.open('pid.json','r').read)
+  pids.keys.each do |k|
+    c="kill -15 #{pids[k]}"
+    puts c
+    `#{c}`
+  end
+rescue Errno::ENOENT
+end
 
 DB      = IO.popen("mongod")
 SERVICE = IO.popen("ruby app.rb -o 0.0.0.0")
+
+File.open('pid.json', 'w') do |f|
+  f.puts({
+    db: DB.pid,
+    service: SERVICE.pid
+  }.to_json)
+end
 
 Thread.new do
   loop do

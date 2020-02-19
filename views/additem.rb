@@ -8,6 +8,8 @@
     }
   end
 
+  self << (FlexTable.new(class: 'invadd') {
+
   self << DataList.new(value: data["location"].to_s, id: 'inv-location', label: "Location", options: http(:get, :inventory, :locations)).style!(flex: 0)
   
   input(value: data["price"].to_s,type: :text, placeholder: "Cost", id: "inv-cost") {}.style!(flex: 0)
@@ -36,3 +38,4 @@
       }
     end
   }.style! flex: 0
+  }.style!(flex: 1))

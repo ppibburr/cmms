@@ -89,6 +89,14 @@
 }
 
 @media only screen and (max-width: 450px) {
+  .invadd {
+    min-width: 80vw;
+    max-width: 80vw;
+    min-height: 80vh;
+    max-height: 80vh;        
+    margin: auto;
+  }
+  
   .main {
     min-width: 100vw;
     box-shadow: unset;
