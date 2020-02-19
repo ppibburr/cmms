@@ -51,7 +51,7 @@
         _ = "$#{"%.2f" % _}" if c == 2
         
         s=span {_}.style! cursor: :pointer,'text-overflow': :ellipsis
-        s.style! color: :black if c == 2
+        s.style! color: :red if c == 2
       }.style!("min-width": q.px,"text-align": qq).style! 'font-family': :monospace
     end
   }
