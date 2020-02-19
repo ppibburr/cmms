@@ -104,5 +104,9 @@
 }
 }
 
+.id {
+  min-width: 20px !important
+}
+
 .list .row:nth-child(odd) {background: azure}
 .list .row:nth-child(even) {background: aliceblue}
