@@ -48,3 +48,70 @@
 			  filter(event.target, list);
 		  }        
     } 
+    
+    var workorder_tasks = [];
+    
+    function populate_workorder() {
+		obj = {
+			"department": id("input-department").value,
+		    "equipment":  parseInt(id("input-equipment").value.split(" ")[0]),
+		    "priority":   id("input-priority").value,
+		    "type":       id("input-type").value,
+		    "description":id("description").value,
+		    "tasks":      workorder_tasks
+		}
+		
+		return obj
+	}
+	
+	function create_workorder() {
+	  obj = populate_workorder();
+	  console.log(obj);	
+	  fetch('/api/workorders', {
+		method: 'post',
+		body: JSON.stringify(obj)
+	  }).then(function(response) {
+		return response.json();
+	  }).then(function(data) {
+		console.log(data);
+		window.location = "/view/workorders";		
+	  });	  
+	}
+	
+	function update_workorder(o) {
+  	  obj = populate_workorder();
+	  fetch('/api/workorders/'+o, {
+		method: 'put',
+		body: JSON.stringify(obj)
+	  }).then(function(response) {
+		return response.json();
+	  }).then(function(data) {
+		console.log(data);
+		window.location = "/view/workorders";
+	  });
+	}
+	
+	function close_workorder(o) {
+  	  obj = populate_workorder();
+  	  obj["closed"] = true;
+	  fetch('/api/workorders/'+o, {
+		method: 'put',
+		body: JSON.stringify(obj)
+	  }).then(function(response) {
+		return response.json();
+	  }).then(function(data) {
+		console.log(data);
+		window.location = "/view/workorders";
+	  });
+	}	
+
+	function delete_workorder(o) {
+	  fetch('/api/workorders/'+o, {
+		method: 'delete',
+	  }).then(function(response) {
+		return response.json();
+	  }).then(function(data) {
+		console.log(data);
+		window.location = "/";
+	  });
+	}	

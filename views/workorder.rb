@@ -26,7 +26,7 @@ class WorkOrders < FlexTable
             }.style! color: :"#009688"
             
             span() {
-              find(:equipment,order: _["equip"])[0]["name"]
+              ((find(:equipment,order: _["equipment"]) || [])[0] || {"name": ""})["name"]
             }.style! color: :"#009688"
             
             div(onclick: "popup(\"/view/workorder/#{_["order"]}\")") {
@@ -55,7 +55,7 @@ class WorkOrders < FlexTable
 			if (event.key === 'Enter') {
 				event.preventDefault();
 				id('new').blur();
-				popup('/create/workorder?description='+encodeURI(id('new').value));
+				popup('/create/workorder?description='+encodeURI(id('new').value)+'&department=Manufacturing');
 				id('new').value = '';
 
 				

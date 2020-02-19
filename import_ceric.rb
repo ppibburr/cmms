@@ -1,6 +1,6 @@
 
 FILES=[
-  "./setter.csv"
+  "./pkg.csv"
 ]
 
 
@@ -114,8 +114,8 @@ FILES.each do |f|
       if row[1] != ""
         next unless row[1]
         machine.each do |m| 
-          m.location = "platform"
-          m.department = "Manufacturing"
+          m.location = "dehacker"
+          m.department = "Packaging"
          
           resp = http(:post, :tasks, data: Task.new(row[1],$1.to_i).to_h) 
           m.tasks << resp

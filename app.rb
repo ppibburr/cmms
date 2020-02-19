@@ -3,6 +3,9 @@ require 'sinatra'
 require 'mongo'
 require 'json'
 
+
+set :static_cache_control, [:public, :private,:max_age => 0]
+
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require './build'
 
@@ -11,15 +14,17 @@ def build view, data
 end
 
 get '/' do
+cache_control :public, :no_cache
   build "page.rb", {"view": "main.rb", "title": "Home", "data": {}}
 end
 
 get '/view/workorders' do
+cache_control :public, :no_cache
   build "page.rb", {"view": "workorder.rb", title: "Work Orders", "data": DB["workorders"].find.to_a.map{|t| from_bson_id(t)}}
 end
 
 get '/create/workorder' do
-   build "popup.rb", view: "view_workorder.rb", title: "Create Work Order", data: {date: Time.now.to_s,description: params["description"]}
+   build "popup.rb", view: "view_workorder.rb", title: "Create Work Order", data: {date: Time.now.to_s,description: params["description"], department: params["department"]}
 end
 
 get '/view/workorder/:id' do
@@ -35,6 +40,7 @@ get "/view/department/:dept" do
 end
 
 get '/view/equipment/:id' do
+cache_control :public, :no_cache
   build "page.rb", {"view": "view_equipment.rb", title: "Equipment #{params[:id]}", data: get_thing_by_field(:equipment,"order", params[:id].to_i)}
 end
 
@@ -91,7 +97,11 @@ get '/api/:thing' do
 end
 
 def get_thing_by_field thing,fld,val
-  DB[thing].find("#{fld}": val).to_a[0]
+  h={}
+  h[fld]=val
+  DB[thing].find(h).to_a.map do |obj|
+    from_bson_id(obj)
+  end[0]
 end
 
 def get_thing thing,id

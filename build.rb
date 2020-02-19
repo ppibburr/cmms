@@ -226,7 +226,9 @@ class List < FlexTable
     !!@grow_rows
   end
   
-  def header; @header; end
+  def header; @header;
+  end
+ 
   attr_reader :data,:columns
 
   def render t=nil, d=nil,r=nil,c=nil, &b
@@ -257,7 +259,7 @@ class DataList < Node
      
      
      
-      l="dl-#{t}"
+      l="dl-#{t ||= this[:id]}"
       
       div() {
 
@@ -281,14 +283,23 @@ require 'open3'
 require 'json'
 
 def rbml view, data
+
   Open3.popen3("RUBYOPT=-W0 ruby -rjson -r./build ./views/#{view}") do |i,o,e,w|
-    i.puts data.to_json
+    i.puts d=data.to_json
     succ = o.read
     err = e.read.split("\n")
+ 
     if err.empty?
-     succ
+      succ
     elsif view != "error.rb"
-      rbml("error.rb", {"error": err[0], "backtrace": err[1..-1]})
+      begin
+        rbml("error.rb", {"error": err[0], "backtrace": err[1..-1], "object": {view: view, data: data}})
+      rescue => ee
+        "<div style='background-color: white;color:black;'>"+
+        ee[0]+
+        ee[1..-1].reverse.join("<br>")+
+        "</div>"
+      end
     else
       "<div style='background-color: white;color:black;'>"+
       err[0]+
@@ -302,3 +313,4 @@ rescue => err
       err.backtrace.reverse.join("<br>")+
       "</div>"
 end
+
