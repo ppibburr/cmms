@@ -20,7 +20,7 @@ end
 
 get '/view/workorders' do
 cache_control :public, :no_cache
-  build "page.rb", {"view": "workorder.rb", title: "Work Orders", "data": DB["workorders"].find.to_a.map{|t| from_bson_id(t)}}
+  build "page.rb", {"view": "workorder.rb", title: "Work Orders", "data": DB["workorders"].find(closed: nil).to_a.map{|t| from_bson_id(t)}}
 end
 
 get '/create/workorder' do

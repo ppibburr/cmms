@@ -191,12 +191,12 @@ class List < FlexTable
 				  
 				  self << (this.render(self,cell ,i ,ii).style!(flex: (columns[ii] || 0), "flex-shrink": 0,"padding-left":2.px))
 				end
-			  }.style! flex: this.grow_rows? ? 1 : 0, "border-bottom": "solid 1px rosybrown",height: this.row_height
+			  }.style! flex: this.grow_rows? ? 1 : 0, "border-bottom": "solid 1px aliceblue",height: this.row_height
 			  if this.colors
 			    if i.even?
-			      _r.style! "background-color": (this.colors[1] || this.colors[0])
+			    #  _r.style! "background-color": (this.colors[1] || this.colors[0])
 			    else
-			      _r.style! "background-color": this.colors[0]
+			    #  _r.style! "background-color": this.colors[0]
 			    end
 			  end
 			  ""

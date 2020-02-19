@@ -25,4 +25,10 @@ row() {
   }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
 }.style! flex: 1
 
-row() {}.style! flex:1         
+row() {}.style! flex:1 
+
+script {
+  """
+  window.name='cmms-main';
+  """
+}        

@@ -94,7 +94,7 @@
 	
 	function close_workorder(o) {
   	  obj = populate_workorder();
-  	  obj["closed"] = true;
+  	  obj.closed = true;
 	  fetch('/api/workorders/'+o, {
 		method: 'put',
 		body: JSON.stringify(obj)
@@ -102,7 +102,8 @@
 		return response.json();
 	  }).then(function(data) {
 		console.log(data);
-		window.location = "/view/workorders";
+		window.location = "/view/workorders#"+o;
+		location.reload();
 	  });
 	}	
 

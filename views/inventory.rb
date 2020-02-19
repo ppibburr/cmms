@@ -20,12 +20,12 @@
           span() {"$%.2f" % tc}.style! color: :black
         }
       }
-    }.style! flex: 1
+    }.style! flex: 1, 'border-style': :inset
     
     button(onclick: "popup(\"/view/additem\")") {"Add Item"}.style! flex: 0,"min-width": "fit-content"
     hr()
   }.style! "background-color": "#00ced1"
-  self << List.new(id: :inventory, colors: ["gainsboro", "antiquewhite"], header: ["ID", "Location", "Cost", "Vendor", "Model", "Description"], columns: [0, 0, 0, 1,1,3] ,data: data.map do |pt| 
+  self << List.new(id: :inventory, header: ["ID", "Location", "Cost", "Vendor", "Model", "Description"], columns: [0, 0, 0, 1,1,3] ,data: data.map do |pt| 
       [pt["order"], pt["location"], pt["price"], pt["manufacturer"], pt["model_no"], pt["description"]]
     end) {
     this=self
@@ -40,19 +40,18 @@
 
       h= {id: id, onclick: "popup(\"/view/inventory/#{data[r]["order"]}\")"} if r > 0
       h[:class] = 'anchor' if r > 0 && c == 0
+      
       ele(:div, h) {
         if r < 0
           self << e=DataList.new(filter: 'inventory',options:fields[c], value:"", label: _)
-          
           next
         end
-        
    
         _ = "$#{"%.2f" % _}" if c == 2
         
         s=span {_}.style! cursor: :pointer,'text-overflow': :ellipsis
         s.style! color: :red if c == 2
-      }.style!("min-width": q.px,"text-align": qq).style! 'font-family': :monospace
+      }.style!("min-width": q.px,"text-align": qq)#.style! 'font-family': :monospace
     end
   }
 

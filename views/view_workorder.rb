@@ -78,7 +78,7 @@ self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0, 1
 row() {
   if order["order"]
     button(onclick: "delete_workorder(\"#{order["_id"]}\")") {"Delete"}
-    button(onclick: "do_close()") {"Close"}
+    button(onclick: "close_workorder(\"#{order["_id"]}\")") {"Close"}
     button(onclick: "update_workorder(\"#{order["_id"]}\")") {"Update"}
   else
     button(onclick: "create_workorder(\"#{order["_id"]}\")") {"Create"}

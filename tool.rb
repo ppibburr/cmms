@@ -72,6 +72,19 @@ def update_many type, h={}
   end
 end
 
+def csv *o
+  i=0
+  find(*o).map do |q|
+    o=[]
+    a=q.keys
+    o << a.join(",") if i == 0
+    o << a.map do |k|
+      q[k]
+    end.join(",")
+    o
+  end.join("\n")
+end
+
 if ARGV[0]
   binding.pry
 else
