@@ -30,13 +30,16 @@
     end) {
     this=self
     render do |_,r,c|
+      id = "inv-header"
+      id = data[r]["_id"] if r > 0 && c == 0
       q=60
       q=20 if c==0
       qq=:unset
       qq=:end if c==2
-      h={}
-      h = {onclick: "update_cost(\"#{(pt=data[r])["_id"]}\", #{pt["price"]})"} if c==2
-              
+      h={id: id}
+
+      h= {id: id, onclick: "popup(\"/view/inventory/#{data[r]["order"]}\")"} if r > 0
+      h[:class] = 'anchor' if r > 0 && c == 0
       ele(:div, h) {
         if r < 0
           self << e=DataList.new(filter: 'inventory',options:fields[c], value:"", label: _)
@@ -56,6 +59,7 @@
 
   script() {
     """
+    /*
     function update_cost(pt, o) {
       val = prompt('Enter new cost', ''+o);
       event.target.innerText = \"$\"+val;
@@ -63,5 +67,47 @@
         alert(j);
       });
     }
+    */
+    
+    
+    function populate_inventory_item() {
+      obj = {
+        location: id('input-inv-location').value,
+        price: id('inv-cost').value,
+        manufacturer: id('input-inv-vendor').value,
+        model_no: id('inv-model').value,
+        description: id('inv-description').value
+      };
+      console.log(\"create inventory item\");
+      console.log(obj);
+      return obj;    
+    }
+
+    function delete_inventory(pt) {
+      http('delete','/api/inventory/'+pt, {}, function(resp) {
+        console.log(resp);
+        id(pt).outerHTML = '';
+        window.location = '#page';
+      });
+    } 
+    
+    function add_inventory() {
+      obj = populate_inventory_item();
+      http('post','/api/inventory', obj, function(resp) {
+        console.log(resp);
+        window.location = '/view/inventory';
+      });
+    } 
+    
+    function update_inventory(pt) {
+      obj = populate_inventory_item();
+      http('put','/api/inventory/'+pt, obj, function(resp) {
+        console.log(resp);
+        window.location = '/view/inventory#'+pt;
+        location.reload();
+      });
+    }     
+    
+    id(location.hash.split('#')[1]).scrollIntoView();   
     """
   }

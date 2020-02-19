@@ -35,6 +35,10 @@ get '/view/inventory' do
   build "page.rb", {"view": "inventory.rb", title: "Inventory", "data": DB["inventory"].find.to_a.map{|t| from_bson_id(t)}}
 end
 
+get "/view/inventory/:id" do
+  build "popup.rb", {"view": "additem.rb", title: "Modify Inventory Item", data:{id: params[:id].to_i}}
+end
+
 get "/view/additem" do
   build "popup.rb", {"view": "additem.rb", title: "Add Inventory Item", data:{}}
 end

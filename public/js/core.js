@@ -48,7 +48,7 @@
 			  filter(event.target, list);
 		  }        
     } 
-<<<<<<< HEAD
+
     
     var workorder_tasks = [];
     
@@ -131,3 +131,15 @@
     });
   }
 
+  function page(route, after) {
+    fetch(route)
+    .then((response) => {
+      return response.text();
+    })
+    .then((json) => {
+      console.log(json);
+      if (after) {
+        after(json);
+      }
+    });
+  }

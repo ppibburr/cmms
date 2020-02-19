@@ -4,6 +4,12 @@
         padding: 0;
       }
       
+      
+      .anchor:target {
+        color: red !important;
+        font-stretch: extra-expanded;
+      }
+      
       body {
         /*text-align: -webkit-center;*/
         background-color: floralwhite;
