@@ -26,6 +26,15 @@ get '/view/workorder/:id' do
   build "popup.rb", view: "view_workorder.rb", title: "Work Order: #{params[:id]}", data: get_thing_by_field(:workorders,"order", params[:id].to_i)
 end
 
+get '/view/inventory' do
+  build "page.rb", {"view": "inventory.rb", title: "Inventory", "data": DB["inventory"].find.to_a.map{|t| from_bson_id(t)}}
+end
+
+get "/view/additem" do
+  build "popup.rb", {"view": "additem.rb", title: "Add Inventory Item", data:{}}
+end
+
+
 get "/view/departments" do
   build "popup.rb", {"view": "view_departments.rb", title: "Department List", data:{}}
 end
@@ -40,6 +49,18 @@ end
 
 get '/view/workhistory/:id' do
   build "popup.rb", {"view": "view_work_history.rb", title: "Equipment ID: #{params[:id]} Work History", "data": get_thing_by_field(:equipment,"order", params[:id].to_i)}
+end
+
+get "/api/inventory/locations" do
+  DB["inventory"].find.to_a.map do |i| i["location"] end.uniq.to_json 
+end
+
+get "/api/inventory/locations" do
+  DB["inventory"].find.to_a.map do |i| i["location"] end.uniq.to_json 
+end
+
+get "/api/vendors" do
+  DB["inventory"].find.to_a.map do |i| i["manufacturer"] end.uniq.to_json 
 end
 
 get "/api/workorder_types" do

@@ -17,7 +17,7 @@ row() {
 }.style! flex: 1   
 
 row() {
-  div(onclick: "popup(\"/view/inventory\")") {
+  div(onclick: "window.open(\"/view/inventory\", \"inventory\")") {
     img(src: '/img/inv.png').style! width:3.em
     h2() {
 	  "Inventory"

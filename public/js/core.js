@@ -48,3 +48,16 @@
 			  filter(event.target, list);
 		  }        
     } 
+
+  function http(method, route, data, after) {
+    fetch(route, {method: method, body: JSON.stringify(data)})
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      if (after) {
+        after(json);
+      }
+    });
+  }
