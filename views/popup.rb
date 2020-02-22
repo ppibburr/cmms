@@ -9,7 +9,7 @@ view  = obj["view"]
 
 puts(FlexTable.new() {
     row() {
-      span() {title || "Untitled"}
+      span(id: 'popup-title') {title || "Untitled"}
       img(src: "/img/close.png", onclick: 'do_close()').style! height:1.em
     }.style! flex: 0,"background-color": "#a090af", color: 'black', 'justify-content': 'space-between'
 

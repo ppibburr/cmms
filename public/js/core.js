@@ -93,29 +93,33 @@
 	}
 	
 	function close_workorder(o) {
-  	  obj = populate_workorder();
-  	  obj.closed = true;
-	  fetch('/api/workorders/'+o, {
-		method: 'put',
-		body: JSON.stringify(obj)
-	  }).then(function(response) {
-		return response.json();
-	  }).then(function(data) {
-		console.log(data);
-		window.location = "/view/workorders#"+o;
-		location.reload();
-	  });
+  	  if (confirm("Close work order?")) {
+	    obj = populate_workorder();
+  	    obj.closed = true;
+	    fetch('/api/workorders/'+o, {
+		  method: 'put',
+		  body: JSON.stringify(obj)
+	    }).then(function(response) {
+		  return response.json();
+	    }).then(function(data) {
+		  console.log(data);
+  		  window.location = "/view/workorders#"+o;
+		  location.reload();
+	    });
+      }
 	}	
 
 	function delete_workorder(o) {
-	  fetch('/api/workorders/'+o, {
-		method: 'delete',
-	  }).then(function(response) {
-		return response.json();
-	  }).then(function(data) {
-		console.log(data);
-		window.location = "/";
-	  });
+	  if (confirm("Are you sure you wish to delete item?")) {	
+	    fetch('/api/workorders/'+o, {
+		  method: 'delete',
+	    }).then(function(response) {
+		  return response.json();
+	    }).then(function(data) {
+		  console.log(data);
+		  window.location = "/";
+	    });
+	  }
 	}	
 
 

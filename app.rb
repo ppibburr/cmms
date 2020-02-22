@@ -31,12 +31,21 @@ get '/view/workorder/:id' do
   build "popup.rb", view: "view_workorder.rb", title: "Work Order: #{params[:id]}", data: get_thing_by_field(:workorders,"order", params[:id].to_i)
 end
 
+get "/print/inventory" do
+  content_type 'text/plain'
+  `ruby ./print_inventory.rb`
+end
+
+get "/view/print/workorder/:id" do
+  build "page.rb", {view: "print_wo.rb", title: "Print Work Order: #{id=params[:id]}", data: {id: id}} 
+end
+
 get '/view/inventory' do
   build "page.rb", {"view": "inventory.rb", title: "Inventory", "data": DB["inventory"].find.to_a.map{|t| from_bson_id(t)}}
 end
 
 get "/view/inventory/:id" do
-  build "popup.rb", {"view": "additem.rb", title: "Modify Inventory Item", data:{id: params[:id].to_i}}
+  build "popup.rb", {"view": "additem.rb", title: "Modify Inventory Item: #{params[:id]}", data:{id: params[:id].to_i}}
 end
 
 get "/view/additem" do
