@@ -18,9 +18,9 @@ puts(Node.new(:html) {
   } 
 
   self << FlexTable.new(id: :page) {
-    row() {
+    row(class: 'header') {
       img(src: "/img/gg-logo.jpg", onclick: 'window.open("/","cmms-main")') {}.style! margin: :auto
-      span(onclick: "window.close()") {"X"}.add_class("close-button")
+      #span(onclick: "window.close()") {"X"}.add_class("close-button")
     }.style! flex: 0,"background-color": :white, 'border-style': :outset
   
     eval(open("./views/"+view).read)

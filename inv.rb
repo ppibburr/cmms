@@ -1,5 +1,4 @@
-raw = open("out.txt").read
-.gsub(/.*\.rpt*\n/,'').gsub(/[0-9]+\/[0-9]+\/[0-9]+.*\n/,'').gsub(/Price Lis.*\n/,'')
+raw = open("out.txt").read.gsub(/.*\.rpt*\n/,'').gsub(/[0-9]+\/[0-9]+\/[0-9]+.*\n/,'').gsub(/Price Lis.*\n/,'')
 File.open("out.txt","w") do |f| f.puts raw end
 pa = []
 i = 0; 
@@ -24,12 +23,17 @@ pta = []
 
 pa.each do |pt|
   pta << {
-    part_no: pt[0],
-    description: pt[1],
-    location: pt[2],
+    part_no:      pt[0],
+    description:  pt[1],
+    location:     pt[2],
     manufacturer: pt[6],
     model_no:     pt[7],
-    price:        pt[8]
+    price:        (pt[8]||0).to_s.gsub("$",'').to_f,
+    equipment:    [],
+    min:          1,
+    fill:         2,
+    quantity:     0,
+    proteus:      pt[0]
   }
 end
 

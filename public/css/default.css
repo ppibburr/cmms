@@ -97,6 +97,10 @@
     margin: auto;
   }
   
+  .ext-cost {
+    display: none;
+  }
+  
   .main {
     min-width: 100vw;
     box-shadow: unset;
