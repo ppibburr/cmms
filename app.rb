@@ -2,7 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require 'mongo'
 require 'json'
-
+require 'sinatra'
 
 set :static_cache_control, [:public, :private,:max_age => 0]
 
@@ -13,76 +13,84 @@ def build view, data
   rbml view, data
 end
 
-get '/' do
+get '/hanley/cmms/' do
 cache_control :public, :no_cache
   build "page.rb", {"view": "main.rb", "title": "Home", "data": {}}
 end
 
-get '/view/workorders' do
+get '/hanley/cmms/view/workorders' do
 cache_control :public, :no_cache
-  build "page.rb", {"view": "workorder.rb", title: "Work Orders", "data": DB["workorders"].find(closed: nil).to_a.map{|t| from_bson_id(t)}}
+  build "page.rb", {"view": "workorder.rb", title: "Work Orders"}
 end
 
-get '/create/workorder' do
+get "/hanley/cmms/view/workorders/list" do
+  build "view.rb", {"view": "list_workorders.rb", data: DB["workorders"].find(closed: nil).to_a.map{|t| from_bson_id(t)}}
+end
+
+get "/hanley/cmms/view/inventory/list" do
+  build "view.rb", {"view": "list_inventory.rb"}#data: DB["inventory"].find(closed: nil).to_a.map{|t| from_bson_id(t)}}
+end
+
+get '/hanley/cmms/create/workorder' do
    build "popup.rb", view: "view_workorder.rb", title: "Create Work Order", data: {date: Time.now.to_s,description: params["description"], department: params["department"]}
 end
 
-get '/view/workorder/:id' do
+get '/hanley/cmms/view/workorder/:id' do
   build "popup.rb", view: "view_workorder.rb", title: "Work Order: #{params[:id]}", data: get_thing_by_field(:workorders,"order", params[:id].to_i)
 end
 
-get "/print/inventory" do
+get "/hanley/cmms/print/inventory" do
   content_type 'text/plain'
-  `ruby ./print_inventory.rb`
+  "<code>"+`ruby ./print_inventory.rb`.gsub("\n","<br>").gsub(" ","&nbsp;")+"</code>"
 end
 
-get "/view/print/workorder/:id" do
+get "/hanley/cmms/view/print/workorder/:id" do
   build "page.rb", {view: "print_wo.rb", title: "Print Work Order: #{id=params[:id]}", data: {id: id}} 
 end
 
-get '/view/inventory' do
-  build "page.rb", {"view": "inventory.rb", title: "Inventory", "data": DB["inventory"].find.to_a.map{|t| from_bson_id(t)}}
+get '/hanley/cmms/view/inventory' do
+  build "page.rb", {"view": "inventory.rb", title: "Inventory"}
 end
 
-get "/view/inventory/:id" do
+get "/hanley/cmms/view/inventory/:id" do
   build "popup.rb", {"view": "additem.rb", title: "Modify Inventory Item: #{params[:id]}", data:{id: params[:id].to_i}}
 end
 
-get "/view/additem" do
+get "/hanley/cmms/view/additem" do
   build "popup.rb", {"view": "additem.rb", title: "Add Inventory Item", data:{}}
 end
 
 
-get "/view/departments" do
+get "/hanley/cmms/view/departments" do
   build "popup.rb", {"view": "view_departments.rb", title: "Department List", data:{}}
 end
 
-get "/view/department/:dept" do
+get "/hanley/cmms/view/department/:dept" do
   build "popup.rb", {view: "view_department.rb", title: "#{params[:dept]} Equipment List", data: {department: params[:dept], equipment: find_thing(:equipment, "department": params[:dept])}}
 end
 
-get '/view/equipment/:id' do
+get '/hanley/cmms/view/equipment/:id' do
 cache_control :public, :no_cache
   build "page.rb", {"view": "view_equipment.rb", title: "Equipment #{params[:id]}", data: get_thing_by_field(:equipment,"order", params[:id].to_i)}
 end
 
-get '/view/workhistory/:id' do
+get '/hanley/cmms/view/workhistory/:id' do
   build "popup.rb", {"view": "view_work_history.rb", title: "Equipment ID: #{params[:id]} Work History", "data": get_thing_by_field(:equipment,"order", params[:id].to_i)}
 end
 
-get "/api/inventory/locations" do
+get "/hanley/cmms/api/inventory/locations" do
   DB["inventory"].find.to_a.map do |i| i["location"] end.uniq.to_json 
 end
 
-get "/api/inventory/locations" do
+get "/hanley/cmms/api/inventory/locations" do
   DB["inventory"].find.to_a.map do |i| i["location"] end.uniq.to_json 
 end
 
-get "/api/vendors" do
+get "/hanley/cmms/api/vendors" do
   DB["inventory"].find.to_a.map do |i| i["manufacturer"] end.uniq.to_json 
 end
 
-get "/api/workorder_types" do
+get "/hanley/cmms/api/workorder_types" do
   [
     :PM,
     :SAFETY,
@@ -91,7 +99,7 @@ get "/api/workorder_types" do
   ].to_json
 end
 
-get "/api/workorder_priorities" do
+get "/hanley/cmms/api/workorder_priorities" do
   [
     :ASAP,
     :EMERG,
@@ -99,7 +107,7 @@ get "/api/workorder_priorities" do
   ].to_json
 end
 
-get "/api/crafts" do
+get "/hanley/cmms/api/crafts" do
   [
     :ELE_1,
     :ELE_2,
@@ -111,7 +119,7 @@ get "/api/crafts" do
   ].to_json
 end
 
-get "/api/departments" do
+get "/hanley/cmms/api/departments" do
   [
     "office",
     "packaging",
@@ -126,7 +134,7 @@ get "/api/departments" do
   ].to_json
 end
 
-get '/api/:thing' do
+get '/hanley/cmms/api/:thing' do
   DB[params[:thing]].find.to_a.map{|t| from_bson_id(t)}.to_json
 end
 
@@ -148,16 +156,16 @@ def find_thing thing, h={}
   end
 end
 
-get "/api/find/:thing" do
+get "/hanley/cmms/api/find/:thing" do
   h = JSON.parse(request.body.read.to_s)
   find_thing(params[:thing], h).to_json
 end
 
-get '/api/:thing/:id' do
+get '/hanley/cmms/api/:thing/:id' do
   get_thing(params[:thing], params[:id]).to_json
 end
 
-post '/api/:thing' do
+post '/hanley/cmms/api/:thing' do
   obj = JSON.parse(request.body.read.to_s)
   obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
   oid = DB[params[:thing]].insert_one(obj)
@@ -165,12 +173,12 @@ post '/api/:thing' do
   "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
 end
 
-delete '/api/:thing/:id' do
+delete '/hanley/cmms/api/:thing/:id' do
   DB[params[:thing]].delete_one('_id' => to_bson_id(params[:id]))
   {delete: params[:id]}.to_json
 end
 
-put '/api/:thing/:id' do
+put '/hanley/cmms/api/:thing/:id' do
   DB[params[:thing]].update_one({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
   {_id: params[:id]}.to_json
 end

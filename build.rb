@@ -284,7 +284,9 @@ require 'json'
 
 def rbml view, data
 
-  Open3.popen3("RUBYOPT=-W0 ruby -rjson -r./build ./views/#{view}") do |i,o,e,w|
+  build = File.expand_path(File.dirname(__FILE__)+"/build.rb")
+  viewf = File.expand_path(File.dirname(__FILE__)+"/views/"+view)
+  Open3.popen3("RUBYOPT=-W0 ruby -rjson -r#{build} #{viewf}") do |i,o,e,w|
     i.puts d=data.to_json
     succ = o.read
     err = e.read.split("\n")
@@ -296,8 +298,8 @@ def rbml view, data
         rbml("error.rb", {"error": err[0], "backtrace": err[1..-1], "object": {view: view, data: data}})
       rescue => ee
         "<div style='background-color: white;color:black;'>"+
-        ee[0]+
-        ee[1..-1].reverse.join("<br>")+
+        err[0]+
+        err[1..-1].reverse.join("<br>")+
         "</div>"
       end
     else

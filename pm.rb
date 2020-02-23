@@ -5,7 +5,8 @@ wo = {}
 open_orders = find :workorders, open: true
 
 get(:tasks).find_all do |t|
-  t['next_perform'].to_i >= today
+  t['next_perform'] ||= (t["interval"].to_i == 70) ? 1 : 3
+  t['next_perform'].to_i <= today
 end.find_all do |t|
   !open_orders.find do |o| o.tasks.index(t) end
 end.each do |t|

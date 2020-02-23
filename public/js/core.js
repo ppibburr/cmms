@@ -1,5 +1,6 @@
   // Displays the popup id element, populates it with request 'u'
   function popup(u) {
+    u='/hanley/cmms'+u
     window.location = "#popup";
     fetch(u)
     .then((response) => {
@@ -68,27 +69,27 @@
 	function create_workorder() {
 	  obj = populate_workorder();
 	  console.log(obj);	
-	  fetch('/api/workorders', {
+	  fetch('/hanley/cmms/api/workorders', {
 		method: 'post',
 		body: JSON.stringify(obj)
 	  }).then(function(response) {
 		return response.json();
 	  }).then(function(data) {
 		console.log(data);
-		window.location = "/view/workorders";		
+		window.location = "/hanley/cmms/view/workorders";		
 	  });	  
 	}
 	
 	function update_workorder(o) {
   	  obj = populate_workorder();
-	  fetch('/api/workorders/'+o, {
+	  fetch('/hanley/cmms/api/workorders/'+o, {
 		method: 'put',
 		body: JSON.stringify(obj)
 	  }).then(function(response) {
 		return response.json();
 	  }).then(function(data) {
 		console.log(data);
-		window.location = "/view/workorders";
+		window.location = "/hanley/cmms/view/workorders";
 	  });
 	}
 	
@@ -96,14 +97,14 @@
   	  if (confirm("Close work order?")) {
 	    obj = populate_workorder();
   	    obj.closed = true;
-	    fetch('/api/workorders/'+o, {
+	    fetch('/hanley/cmms/api/workorders/'+o, {
 		  method: 'put',
 		  body: JSON.stringify(obj)
 	    }).then(function(response) {
 		  return response.json();
 	    }).then(function(data) {
 		  console.log(data);
-  		  window.location = "/view/workorders#"+o;
+  		  window.location = "/hanley/cmms/view/workorders#"+o;
 		  location.reload();
 	    });
       }
@@ -111,20 +112,27 @@
 
 	function delete_workorder(o) {
 	  if (confirm("Are you sure you wish to delete item?")) {	
-	    fetch('/api/workorders/'+o, {
+	    fetch('/hanley/cmms/api/workorders/'+o, {
 		  method: 'delete',
 	    }).then(function(response) {
 		  return response.json();
 	    }).then(function(data) {
 		  console.log(data);
-		  window.location = "/";
+		  window.location = "/hanley/cmms/view/workorders";
 	    });
 	  }
 	}	
 
 
   function http(method, route, data, after) {
-    fetch(route, {method: method, body: JSON.stringify(data)})
+	opts={method: method};
+	if (data) {
+	  opts = {method: method, body: JSON.stringify(data)};
+	} else {
+		
+	}  
+	  
+    fetch('/hanley/cmms'+route, opts)
     .then((response) => {
       return response.json();
     })
@@ -137,7 +145,7 @@
   }
 
   function page(route, after) {
-    fetch(route)
+    fetch('/hanley/cmms/'+route)
     .then((response) => {
       return response.text();
     })

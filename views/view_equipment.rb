@@ -1,6 +1,6 @@
 row() {
   "Equipment ID: #{d["order"].to_s}"
-}.style! flex: 0,"background-color": :darkblue, color: :azure
+}.style! flex: 0,"background-color": "#1f1f72", color: :azure
 
 row() {
   div() {d["name"]}.style! "text-align": :center
@@ -53,7 +53,7 @@ row() {
   span() {
     "Preventative Maintenance Tasks"
   }
-}.style! flex:0, "justify-content": "space-evenly", "background-color": "teal"
+}.style! flex:0, "justify-content": "space-evenly", "background-color": "#E3E3F6"
 
 row() {
   fields = [

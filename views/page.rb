@@ -19,11 +19,11 @@ puts(Node.new(:html) {
 
   self << FlexTable.new(id: :page) {
     row(class: 'header') {
-      img(src: "/img/gg-logo.jpg", onclick: 'window.open("/","cmms-main")') {}.style! margin: :auto
+      img(src: "/img/gg-logo.jpg", onclick: 'window.open("/hanley/cmms/","cmms-main")') {}.style! margin: :auto
       #span(onclick: "window.close()") {"X"}.add_class("close-button")
-    }.style! flex: 0,"background-color": :white, 'border-style': :outset
+    }.style! flex: 0,"background-color": :white#, 'border-style': :outset
   
-    eval(open("./views/"+view).read)
+    eval(open(f="./views/"+view).read, binding, f, 1)
     
   }.add_class(:main)
    

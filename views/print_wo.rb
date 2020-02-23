@@ -2,7 +2,10 @@ id = data["id"]
 
 o = find_one(:workorders, order: id.to_i)
 e = find_one(:equipment, order: o["equip"])
-
+e ||= {
+  "name": "null",
+  "location": "null"
+}
 style() {
   """
   .field {
@@ -75,7 +78,7 @@ row() {
 }.style! flex: 0, 'border-bottom': 'solid 1px black'
 
 self << FlexTable.new() {
-  o["tasks"].each do |t| 
+  (o["tasks"] || []).each do |t| 
     t=http(:get, :tasks, t["_id"]) 
     row() {
       code() {span() {t["craft"].ljust(8).gsub(" ", "&nbsp;")}

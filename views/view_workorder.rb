@@ -77,6 +77,7 @@ self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0, 1
 
 row() {
   if order["order"]
+    button(onclick: "window.open(\"/hanley/cmms/view/print/workorder/#{order["order"]}\",\"print\")") {"Print"}
     button(onclick: "delete_workorder(\"#{order["_id"]}\")") {"Delete"}
     button(onclick: "close_workorder(\"#{order["_id"]}\")") {"Close"}
     button(onclick: "update_workorder(\"#{order["_id"]}\")") {"Update"}

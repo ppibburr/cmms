@@ -1,11 +1,12 @@
 require 'json'
 
 if ARGV[0]
+$ECHO_HTTP=true
 require 'pry'
 begin
   pids = JSON.parse(File.open('pid.json','r').read)
   pids.keys.each do |k|
-    c="kill -15 #{pids[k]}"
+    c="kill -9 #{pids[k]}"
     puts c
     `#{c}`
   end
@@ -13,6 +14,7 @@ rescue Errno::ENOENT
 end
 
 DB      = IO.popen("mongod")
+sleep 3
 SERVICE = IO.popen("ruby app.rb -o 0.0.0.0")
 
 File.open('pid.json', 'w') do |f|
@@ -25,15 +27,16 @@ end
 Thread.new do
   loop do
     puts SERVICE.gets
+    #puts DB.gets
   end
 end
 
-sleep 0
+#sleep 1
 end
 
 def http method, *o, data: {}
-  cmd="curl -X #{method.to_s.upcase} -d '#{data.to_json}' http://localhost:4567/api/#{o.join("/")} 2>/dev/null"
-  puts cmd if false
+  cmd="curl -X #{method.to_s.upcase} -d '#{data.to_json}' http://localhost:4567/hanley/cmms/api/#{o.join("/")} 2>/dev/null"
+  puts cmd if $ECHO_HTTP
   JSON.parse(`#{cmd}`)
 end
 

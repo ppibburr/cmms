@@ -16,7 +16,7 @@ row() {
 		  })
 		  next
 		end
-		span(onclick: "window.open(\"/view/equipment/#{data["equipment"][r]["order"]}\", \"equipment\")") {_}
+		span(onclick: "window.open(\"/hanley/cmms/view/equipment/#{data["equipment"][r]["order"]}\", \"equipment\")") {_}
 	  }.style!('min-width': c < 1 ? 20.px : 50.px).style! 'font-family': :monospace, cursor: :pointer
 	end
   }

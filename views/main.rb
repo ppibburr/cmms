@@ -1,31 +1,35 @@
+
 row() {
-  div(onclick: "window.open(\"/view/workorders\",\"workorders\")"){
-    img(src: '/img/wo.png').style! width:3.em
+  div().style! flex: 1
+  
+  div(onclick: "window.open(\"/hanley/cmms/view/workorders\",\"workorders\").location=\"/hanley/cmms/view/workorders\""){
     h2() {
 	  "Work Orders"
     }.style! 'vertical-align': :top
-  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
-}.style! flex: 1    
+    img(src: '/img/wo.png').style! width:3.em    
+  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer,flex:1
 
-row() {
+
   div(onclick: "popup(\"/view/departments\")"){
-    img(src: '/img/equip.svg').style! width:3.em
     h2() {
 	  "Equipment"
     }.style! 'vertical-align': :top
-  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
-}.style! flex: 1   
+    img(src: '/img/equip.svg').style! width:3.em
+  }.style! margin: '', 'min-width': 20.vw, cursor: :pointer, flex:1, 'vertical-align': :bottom
 
-row() {
-  div(onclick: "window.open(\"/view/inventory\", \"inventory\")") {
-    img(src: '/img/inv.png').style! width:3.em
+  div(onclick: "window.open(\"/hanley/cmms/view/inventory\", \"inventory\")") {
     h2() {
 	  "Inventory"
     }.style! 'vertical-align': :top
-  }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer
-}.style! flex: 1
+    img(src: '/img/inv.png').style! width:3.em
+  }.style!(margin: :auto, 'min-width': 20.vw, cursor: :pointer, flex: 1)
+  
+  div().style! flex: 1
+}.style!(flex: 1, 'text-align': :center)
 
-row() {}.style! flex:1 
+row() {
+  span() {"Hanley Plant - CMMS v0.1 (c) km-does.xyz 2020"}.style! margin: :auto
+}.style! flex:1, 'text-align': :center 
 
 script {
   """
