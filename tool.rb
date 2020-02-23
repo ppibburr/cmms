@@ -1,5 +1,17 @@
 require 'json'
 
+class Array
+  def every i
+    n = []
+    e=-1
+    while e <= length-1
+      n << self[(e+1)..(e+i)]
+      e = e+i
+    end
+    n
+  end
+end
+
 if ARGV[0]
 $ECHO_HTTP=true
 require 'pry'
@@ -65,7 +77,7 @@ def get(type,*o)
 end
 
 def clear type
-  get(type).each do |r| delete type, r['_id'] end
+  http :delete, type
 end
 
 def find type, h={}
@@ -91,6 +103,10 @@ def update_many type, h={}
   end
 end
 
+def create_many type, a
+  http :post, type, data: a
+end
+
 def csv *o
   i=0
   find(*o).map do |q|
@@ -102,6 +118,47 @@ def csv *o
     end.join(",")
     o
   end.join("\n")
+end
+
+def init type: nil
+  h={
+    departments: "./dept.rb",  
+    inventory:   "./inv.rb",      
+    equipment:   "./import_ceric.rb"      ,
+    workorders:  "./wo.rb 1 1",      
+  }
+
+  if !type
+    h.keys.each do |k|
+      init type: k
+    end 
+  else
+    rb = h[type]
+    puts "Init DB: #{type} ..."
+    system "ruby #{rb} 2>/dev/null"
+    puts "done."
+  end
+end
+
+def dump
+
+end
+
+def restore type: nil
+  if type
+  
+    return 
+  end
+  
+  
+end
+
+def amount of: nil
+  if of
+    get(of).length
+  else
+    puts "No type of"
+  end
 end
 
 if ARGV[0]

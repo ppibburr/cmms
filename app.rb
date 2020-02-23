@@ -120,19 +120,18 @@ get "/hanley/cmms/api/crafts" do
 end
 
 get "/hanley/cmms/api/departments" do
-  [
-    "office",
-    "packaging",
-    "manufacturing",
-    "grinding",
-    "magroom",
-    "crushing",
-    "thinbrick",
-    "warehouse",
-    "parkinglot",
-    "maintenance"
-  ].to_json
+  DB["departments"].find.to_a.map{|t| from_bson_id(t)}.to_json
 end
+
+get "/hanley/cmms/api/departments/:dept/locations" do
+  DB["departments"].find_one(name: params[:dept])["locations"].to_json
+end
+
+
+get "/hanley/cmms/api/departments/:dept" do
+  DB["departments"].find(name: params[:dept]).to_a.map{|t| from_bson_id(t)}[0].to_json
+end
+
 
 get '/hanley/cmms/api/:thing' do
   DB[params[:thing]].find.to_a.map{|t| from_bson_id(t)}.to_json
@@ -167,10 +166,19 @@ end
 
 post '/hanley/cmms/api/:thing' do
   obj = JSON.parse(request.body.read.to_s)
-  obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
-  oid = DB[params[:thing]].insert_one(obj)
-  oid=oid.inserted_id
-  "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
+  if !obj.is_a?(Array)
+    obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
+    oid = DB[params[:thing]].insert_one(obj)
+    oid=oid.inserted_id
+    "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
+  else
+    order = DB[params[:thing]].distinct("order").sort.last || 0 rescue 0
+    obj.each do |o|
+      o["order"] = (order+=1)
+    end
+    DB[params[:thing]].insert_many(obj)
+    obj.to_json
+  end
 end
 
 delete '/hanley/cmms/api/:thing/:id' do
@@ -181,6 +189,11 @@ end
 put '/hanley/cmms/api/:thing/:id' do
   DB[params[:thing]].update_one({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
   {_id: params[:id]}.to_json
+end
+
+delete '/hanley/cmms/api/:type' do
+  DB[params[:type]].delete_many
+  "{\"delete\": 200}"
 end
 
 def to_bson_id(id) BSON::ObjectId.from_string(id) end

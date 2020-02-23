@@ -2,7 +2,7 @@
 row() {
   div().style! flex: 1
   
-  div(onclick: "window.open(\"/hanley/cmms/view/workorders\",\"workorders\").location=\"/hanley/cmms/view/workorders\""){
+  div(onclick: "open_window(\"workorders\", \"/hanley/cmms/view/workorders\")"){
     h2() {
 	  "Work Orders"
     }.style! 'vertical-align': :top
@@ -34,5 +34,16 @@ row() {
 script {
   """
   window.name='cmms-main';
+  
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/service-worker.js')
+    .then(() => {
+      console.log('Service worker registered');
+    })
+    .catch(err => {
+      console.log('Service worker registration failed: ' + err);
+    });
+}  
   """
 }        

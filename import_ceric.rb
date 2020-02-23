@@ -1,11 +1,17 @@
 
 FILES=[
-  "./pkg.csv"
+  "./pkg.csv",
+  "./setter.csv"
 ]
 
 
 DB = {}
 require 'json'
+require './tool.rb'
+
+clear :equipment
+clear :tasks
+
 class Task
   attr_accessor :interval, :description, :craft
   def initialize desc, interval
@@ -36,7 +42,7 @@ class Task
 end
 
 class Machine
-  attr_accessor :name, :tasks, :location, :department, :inventory, :downtime, :prev_downtime
+  attr_accessor :order,:name, :tasks, :location, :department, :inventory, :downtime, :prev_downtime
 
   def initialize name
     @name = name
@@ -45,10 +51,12 @@ class Machine
     @downtime = 0.0
     @prev_downtime = 0.0
     @@machines << self
+    @order = @@machines.length
   end
 
   def to_h
     {
+      order: order,
       name: name,
       tasks: tasks,
       location: location,
@@ -91,18 +99,18 @@ FILES.each do |f|
   dupli = false
   data.each do |row|
     if row[0] && row[0].strip != ""
-      if row[1] =~ /(\([0-9]+\))/
+      if row[1] =~ /([0-9]+)/
     
         n=$1
         row[1]=row[1].gsub($1,"").strip
        
-        dupli = true if n && (n != "(1)")
+        dupli = true if n && (n != "1")
         dupli = false if n =~ /1/
       end
-      machine = [Machine.new(row[1].clone)]
+      machine = [Machine.new(row[1].gsub("()",'').clone)]
       if dupli
         machine[0].name << " #1"
-        machine << m=Machine.new(row[1])
+        machine << m=Machine.new(row[1].gsub("()",''))
         m.name << " #2"
       end
       puts "Machine: #{machine}"
@@ -111,13 +119,20 @@ FILES.each do |f|
     if machine[0] && (!row[0] || row[0].strip == "")
 
       row.uniq[-1] =~ /\(([0-9]+) Days\)/
+      int = $1.to_i
       if row[1] != ""
         next unless row[1]
-        machine.each do |m| 
-          m.location = "dehacker"
-          m.department = "Packaging"
-         
-          resp = http(:post, :tasks, data: Task.new(row[1],$1.to_i).to_h) 
+        machine.each do |m|
+          m.department = "manufacturing"
+          m.location   = "platform"
+          
+          if f !~ /set/ 
+            m.location = "dehacker"
+            m.department = "packaging"
+          end
+          
+          resp = Task.new(row[1],int.to_i).to_h
+          resp["equip"] = m.order
           m.tasks << resp
         end
       end
@@ -125,12 +140,11 @@ FILES.each do |f|
   end
 end
 
+Machine.iter.every(15).each do |a|
+  create_many :tasks, (a.map do |m| m.tasks end.flatten)
+end
 
-
-p(Machine.iter.map do |m|
-  obj = http(:post,"equipment", data: m.to_h)
-  m.tasks.each do |t|
-    http(:put, :tasks, t["_id"], data: {machine: obj["order"]})
-  end
-  m.name
-end)
+i=0
+Machine.iter.every(15).each do |a|
+  p(obj = http(:post, :equipment, data: (a.map do |m| m.tasks = find(:tasks, equip: i+=1).map do |t| t["_id"] end ;m.to_h end)))
+end

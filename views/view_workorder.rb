@@ -13,18 +13,7 @@ row() {
     "REACT",
   ], value: order["type"])
 
-  self << DataList.new( id: :department, value: order["department"], label: "Dept", options: [
-    "Packaging",
-    "Manufacturing",
-    "Thinbrick",
-    "Grinding",
-    "Crusher",
-    "Office",
-    "Warehouse",
-    "Scale",
-    "Ace's",
-    "Parking"
-  ])
+  self << DataList.new( id: :department, value: order["department"], label: "Dept", options: get(:departments).map do |dept| dept["name"] end.sort)
 
   list = find(:equipment, department: order["department"]).map do |e|
      e["order"].to_s+" "+e["name"]

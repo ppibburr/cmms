@@ -64,7 +64,7 @@ row() {
   ]
 
   self << List.new(id: :tasks, colors: ["gainsboro", "antiquewhite"], header: ["ID", "Craft", "Interval", "Description"], columns: [0, 0, 0, 1] ,data: (d["tasks"].map do |t|
-    t = http(:get, :tasks, t["_id"])
+    t = http(:get, :tasks, t)
     [t["order"], t["craft"], t["interval"], t["description"]] 
   end)) {
     this=self

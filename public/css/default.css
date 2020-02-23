@@ -95,18 +95,30 @@
       }    
       
 #popup {      
-          -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
-       -moz-animation: fadein 1s; /* Firefox < 16 */
-        -ms-animation: fadein 1s; /* Internet Explorer */
-         -o-animation: fadein 1s; /* Opera < 12.1 */
-            animation: fadein 1s;
+
+    position: relative;
+    left: -600px;
+    background: blue;
+    -webkit-animation: slide 0.2s forwards;
+    -webkit-animation-delay: 1s;
+    animation: slide 0.2s forwards;
+    animation-delay: 0s;
+
   height: 100vh;
   width: 100vw;
   position: fixed;
-  top: 0; left: 0;
+  top: 0; /*left: 0;*/
   background-color: rgba(39, 55, 77, 0.59);
   display: none;
   z-index: 100;            
+}
+
+@-webkit-keyframes slide {
+    100% { left: 0; }
+}
+
+@keyframes slide {
+    100% { left: 0; }
 }
 
 #popup:target {
@@ -199,4 +211,12 @@ text-shadow: 1px 1px 2px pink;
     margin-top: 6px;
     margin-bottom: 6px;
     border-radius: 0.3em;
+}
+
+button {
+ border-radius:0.3em;
+ color:white;
+ background-color:#1f1f7b;
+ border-style:groove;
+ height:2em;
 }

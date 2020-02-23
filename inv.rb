@@ -1,3 +1,8 @@
+require './tool.rb'
+require 'json'
+
+clear :inventory
+
 raw = open("out.txt").read.gsub(/.*\.rpt*\n/,'').gsub(/[0-9]+\/[0-9]+\/[0-9]+.*\n/,'').gsub(/Price Lis.*\n/,'')
 File.open("out.txt","w") do |f| f.puts raw end
 pa = []

@@ -1,7 +1,8 @@
   // Displays the popup id element, populates it with request 'u'
   function popup(u) {
+	id('popup').style.display='none';
     u='/hanley/cmms'+u
-    window.location = "#popup";
+
     fetch(u)
     .then((response) => {
       return response.text();
@@ -9,6 +10,9 @@
     .then((html) => {
       c=id('popup');
       c.innerHTML = html;
+    c.style.display='block';
+    window.location = "#popup";
+
     });
   }    
     
@@ -23,6 +27,7 @@
   }    
   
   function do_close() {
+	id('popup').style.display='none';
     window.location = "#page";
   }
     
@@ -156,3 +161,22 @@
       }
     });
   }
+
+
+  var windows={};
+  function open_window(name, u) {
+	  u = "https://"+location.hostname+":"+location.port+u
+	  console.log('open window: '+u);
+	  if (windows[name]) {
+		windows[name].close();  
+	   windows[name] = window.open(u,name);
+	   windows[name].focus();
+      } else {
+	   windows[name] = window.open(u,name);
+	  }
+	  windows[name].location=u;
+	  windows[name].focus();
+	  console.log(windows);
+  }
+
+  

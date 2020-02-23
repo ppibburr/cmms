@@ -32,7 +32,7 @@
     
     button(onclick: "popup(\"/view/additem\")") {"Add Item"}.style! flex: 0,"min-width": "fit-content"
     hr()
-  }.style! "background-color": "#00ced1"
+  }.style! "background-color": "#fff"
 
   div(id: "inventory") {
     div(class: 'loader')
