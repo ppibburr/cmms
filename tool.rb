@@ -1,5 +1,10 @@
 require 'json'
 
+
+#cluster = "mt1"
+
+require './push.rb'
+
 class Array
   def every i
     n = []
@@ -161,9 +166,15 @@ def amount of: nil
   end
 end
 
+def push title, msg, icon: nil
+  http :post, "push", data: {title: title, body: msg, icon: icon}
+end
+
 if ARGV[0]
   binding.pry
 else
   #send(JSON.parse(gets))
 end
+
+
 

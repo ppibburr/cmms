@@ -1,7 +1,8 @@
+var site_root = "/";
+ 
   // Displays the popup id element, populates it with request 'u'
   function popup(u) {
-	id('popup').style.display='none';
-    u='/hanley/cmms'+u
+    u=site_root+u
 
     fetch(u)
     .then((response) => {
@@ -10,7 +11,7 @@
     .then((html) => {
       c=id('popup');
       c.innerHTML = html;
-    c.style.display='block';
+
     window.location = "#popup";
 
     });
@@ -27,7 +28,7 @@
   }    
   
   function do_close() {
-	id('popup').style.display='none';
+	//id('popup').style.display='none';
     window.location = "#page";
   }
     
@@ -74,27 +75,31 @@
 	function create_workorder() {
 	  obj = populate_workorder();
 	  console.log(obj);	
-	  fetch('/hanley/cmms/api/workorders', {
+	  fetch(site_root+'/api/workorders', {
 		method: 'post',
 		body: JSON.stringify(obj)
 	  }).then(function(response) {
 		return response.json();
 	  }).then(function(data) {
 		console.log(data);
-		window.location = "/hanley/cmms/view/workorders";		
+
+		http('post', "/api/push/workorders/"+data["order"]+"/created", function(j) {
+		  console.log(j);
+	    });	
+		window.location = site_root+"/view/workorders";	
 	  });	  
 	}
 	
 	function update_workorder(o) {
   	  obj = populate_workorder();
-	  fetch('/hanley/cmms/api/workorders/'+o, {
+	  fetch(site_root+'/api/workorders/'+o, {
 		method: 'put',
 		body: JSON.stringify(obj)
 	  }).then(function(response) {
 		return response.json();
 	  }).then(function(data) {
 		console.log(data);
-		window.location = "/hanley/cmms/view/workorders";
+		window.location = site_root+"/view/workorders";
 	  });
 	}
 	
@@ -102,14 +107,14 @@
   	  if (confirm("Close work order?")) {
 	    obj = populate_workorder();
   	    obj.closed = true;
-	    fetch('/hanley/cmms/api/workorders/'+o, {
+	    fetch(site_root+'/api/workorders/'+o, {
 		  method: 'put',
 		  body: JSON.stringify(obj)
 	    }).then(function(response) {
 		  return response.json();
 	    }).then(function(data) {
 		  console.log(data);
-  		  window.location = "/hanley/cmms/view/workorders#"+o;
+  		  window.location = site_root+"/view/workorders#"+o;
 		  location.reload();
 	    });
       }
@@ -117,13 +122,13 @@
 
 	function delete_workorder(o) {
 	  if (confirm("Are you sure you wish to delete item?")) {	
-	    fetch('/hanley/cmms/api/workorders/'+o, {
+	    fetch(site_root+'/api/workorders/'+o, {
 		  method: 'delete',
 	    }).then(function(response) {
 		  return response.json();
 	    }).then(function(data) {
 		  console.log(data);
-		  window.location = "/hanley/cmms/view/workorders";
+		  window.location = site_root+"/view/workorders";
 	    });
 	  }
 	}	
@@ -137,7 +142,7 @@
 		
 	}  
 	  
-    fetch('/hanley/cmms'+route, opts)
+    fetch(site_root+"/"+route, opts)
     .then((response) => {
       return response.json();
     })
@@ -150,12 +155,12 @@
   }
 
   function page(route, after) {
-    fetch('/hanley/cmms/'+route)
+    fetch(site_root+'/'+route)
     .then((response) => {
       return response.text();
     })
     .then((json) => {
-      console.log(json);
+      //console.log(json);
       if (after) {
         after(json);
       }
@@ -166,6 +171,12 @@
   var windows={};
   function open_window(name, u) {
 	  u = "https://"+location.hostname+":"+location.port+u
+	  if (t=id('popup')) {
+	    t.style.display = 'none';
+      }
+      window.location = "#page";
+	  window.location = u;
+	  return;
 	  console.log('open window: '+u);
 	  if (windows[name]) {
 		windows[name].close();  
@@ -180,3 +191,31 @@
   }
 
   
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/service-worker.js')
+    .then(() => {
+      console.log('Service worker registered');
+    })
+    .catch(err => {
+      console.log('Service worker registration failed: ' + err);
+    });
+}    
+
+
+const requestNotificationPermission = async () => {
+    const permission = await window.Notification.requestPermission();
+    // value of permission can be 'granted', 'default', 'denied'
+    // granted: user has accepted the request
+    // default: user has dismissed the notification permission popup by clicking on x
+    // denied: user has denied the request.
+    if(permission !== 'granted'){
+        throw new Error('Permission not granted for Notification');
+    }
+}
+const main = async () => {
+    const permission =  await requestNotificationPermission();
+}
+main();
+
+

@@ -15,6 +15,10 @@ puts(Node.new(:html) {
     self << '<meta name="mobile-web-app-capable" content="yes">'
     link(rel: "stylesheet", href: "/css/default.css")
     script(src: "/js/core.js")  
+    script {"window.site_root = '#{"/hanley/cmms/"}';"}
+    self << %q[
+    <link rel="" href="/vendor/fonts/Montserrat-Medium-Latin-Ext.woff2" as="font" type="font/woff2" crossorigin=""><link rel="" href="/vendor/fonts/Montserrat-Medium-Latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="/vendor/fonts/Montserrat-SemiBold-Latin.woff2" as="font" type="font/woff2" crossorigin=""><link rel="preload" href="/vendor/fonts/Montserrat-Regular-Latin.woff2" as="font" type="font/woff2" crossorigin=""></link>
+    ]
   } 
 
   self << FlexTable.new(id: :page) {
@@ -30,4 +34,30 @@ puts(Node.new(:html) {
   div(id: "popup") {
   
   }
+  
+  self << """
+
+<script>
+window.vapidPublicKey = new Uint8Array(#{ Base64.urlsafe_decode64(PUSH['public_key']).bytes });
+
+navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+  serviceWorkerRegistration.pushManager
+  .subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: window.vapidPublicKey
+  });
+});
+
+navigator.serviceWorker.ready
+  .then((serviceWorkerRegistration) => {
+    serviceWorkerRegistration.pushManager.getSubscription()
+    .then((subscription) => {
+      http('post', '/api/push/register', subscription, function() {console.log('registered sub');});
+    });
+  });
+
+
+</script>
+  """
 }.to_s)
+

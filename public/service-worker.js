@@ -1,21 +1,26 @@
 console.log('ok');
 CACHE_NAME = 'cmms-cache-v1';
-urlsToCache = [
-  '/',
-  '/assets/style.css',
-  '/assets/index.js',
-  '/assets/prism.js',
-  '/assets/img/pwa-stats.png',
-  '/assets/img/bing-store.jpg',
-];
 
 // Listen for the install event, which fires when the service worker is installing
 self.addEventListener('install', event => {
   // Ensures the install event doesn't complete until after the cache promise resolves
   // This is so we don't move on to other events until the critical initial cache is done
-  event.waitUntil(
-    // Open a named cache, then add all the specified URLs to it
-    console.log('foo')
+event.waitUntil(
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.addAll(
+        [
+          '/css/default.css',
+          '/js/core.js',
+          '/img/gg-logo.jpg',
+          '/img/icon-512x512.png',
+          '/img/icon-192x192.png',
+          '/img/inv.png',
+          '/img/wo.png',
+          '/img/equip.svg',
+          '/hanley/cmms/'
+        ]
+      );
+    })
   );
 });
 
@@ -24,53 +29,68 @@ self.addEventListener('install', event => {
 // version, which is a good time to clean up old caches
 self.addEventListener('activate', event => {
   console.log('Finally active. Ready to serve!');
-  event.waitUntil(
-    // Get the keys of all the old caches
-    caches
-      .keys()
-      // Ensure we don't resolve until all the promises do (i.e. each key has been deleted)
-      .then(keys =>
-        Promise.all(
-          keys
-            // Remove any cache that matches the current cache name
-            .filter(key => key !== CACHE_NAME)
-            // Map over the array of old cache names and delete them all
-            .map(key => caches.delete(key))
-        )
-      )
-  );
 });
 
 // Listen for browser fetch events. These fire any time the browser tries to load
 // any outside resources
 self.addEventListener('fetch', function(event) {
-  // This lets us control the response
-  // We pass in a promise that resolves with a response object
+  if (event.request.method =='GET') {            
   event.respondWith(
-    // Check whether we have a matching response for this request in our cache
-    caches.match(event.request).then(response => {
-      // It's in the cache! Serve the response straight from there
-      if (response) {
-        console.log('Serving response from the cache');
-        return response;
-      }
-      // If it's not in the cache we make a fetch request for the resource
-      return (
-        fetch(event.request)
-          // Then we open our cache
-          .then(response => caches.open(CACHE_NAME))
-          // Then we put the request into the cache, so we have it offline next time
-          .then(cache => {
-            // We have to clone the response as response streams can only be read once
-            // This way we can put one copy in the cache and return the other to the browser
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        if(response) {
+		  //console.log(event.request);
+		  return response;
+		} else {
+		  return fetch(event.request);//.then(function(response) {
             //cache.put(event.request, response.clone());
-            console.log('no-cache');
-            return response;
-          })
-          .catch(response => {
-            console.log('Fetch failed, sorry.');
-          })
-      );
+            //return response;
+          //});
+        }
+      });
     })
   );
+}
 });
+
+// serviceworker.js
+// The serviceworker context can respond to 'push' events and trigger
+// notifications on the registration property
+self.addEventListener("push", (event) => {
+  console.log(msg=event.data.json());
+  let title = msg.title;
+  let body = msg.body;
+  let tag = "push-simple-demo-notification-tag";
+  let icon = msg.icon || '/img/wo.png';;
+
+  event.waitUntil(
+    self.registration.showNotification(title, { body, icon, tag, data: {url: msg.url} })
+  )
+});
+
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close();
+  if(event.notification.data) {
+	  if (event.notification.data.url) {
+        clients.openWindow(event.notification.data.url);
+      }
+  }
+});
+
+self.addEventListener("pushsubscriptionchange", event => {
+  event.waitUntil(swRegistration.pushManager.subscribe(event.oldSubscription.options)
+    .then(subscription => {
+      return fetch("/api/push/subscription/changed", {
+        method: "put",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          subscription: subscription,
+          old:          event.oldSubscription
+        })
+      });
+    })
+  );
+}, false)

@@ -4,8 +4,7 @@ require 'mongo'
 require 'json'
 require 'sinatra'
 
-set :static_cache_control, [:public, :private,:max_age => 0]
-
+require 'open-uri'
 DB = Mongo::Client.new("mongodb://localhost",database:"mydb")
 require './build'
 
@@ -13,13 +12,21 @@ def build view, data
   rbml view, data
 end
 
+get "/vendor/*" do
+ content_type "font/woff2"
+ open('https://vaadin.com'+request.fullpath).read
+end
+
+get '/hanley/cmms/api/keepalive/' do
+  "{}"
+end
+
+
 get '/hanley/cmms/' do
-cache_control :public, :no_cache
   build "page.rb", {"view": "main.rb", "title": "Home", "data": {}}
 end
 
 get '/hanley/cmms/view/workorders' do
-cache_control :public, :no_cache
   build "page.rb", {"view": "workorder.rb", title: "Work Orders"}
 end
 
@@ -164,13 +171,29 @@ get '/hanley/cmms/api/:thing/:id' do
   get_thing(params[:thing], params[:id]).to_json
 end
 
+require './push.rb'
+
+post "/hanley/cmms/api/push/workorders/:id/:action" do
+  order = DB["workorders"].find(order: params[:id].to_i).to_a[0]
+  msg = "Work Order: #{order["order"]} created\n#{order["dept"]} #{order["priority"]}"
+  Push.message '/hanley/cmms', title: "Work Order #{params[:action].upcase}", body: msg 
+  "{}"
+end
+
+Push.routes '/hanley/cmms', self
+
 post '/hanley/cmms/api/:thing' do
-  obj = JSON.parse(request.body.read.to_s)
+  content_type "text/json"
+  p :POST
+  p obj = JSON.parse(request.body.read.to_s)
   if !obj.is_a?(Array)
     obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
+    p 1
     oid = DB[params[:thing]].insert_one(obj)
+    p 2
     oid=oid.inserted_id
-    "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
+    p 2
+    next "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
   else
     order = DB[params[:thing]].distinct("order").sort.last || 0 rescue 0
     obj.each do |o|
@@ -190,6 +213,12 @@ put '/hanley/cmms/api/:thing/:id' do
   DB[params[:thing]].update_one({'_id' => to_bson_id(params[:id])}, {'$set' => JSON.parse(request.body.read.to_s).reject{|k,v| k == '_id'}})
   {_id: params[:id]}.to_json
 end
+
+#require 'pusher'
+
+#Pusher.app_id = "952599"
+#Pusher.key = "24d977546012a175f687"
+#Pusher.secret = "4cbb8f34a1b9ac9495b1"
 
 delete '/hanley/cmms/api/:type' do
   DB[params[:type]].delete_many

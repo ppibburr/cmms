@@ -17,7 +17,7 @@ row() {
     img(src: '/img/equip.svg').style! width:3.em
   }.style! margin: '', 'min-width': 20.vw, cursor: :pointer, flex:1, 'vertical-align': :bottom
 
-  div(onclick: "window.open(\"/hanley/cmms/view/inventory\", \"inventory\")") {
+  div(onclick: "open_window(\"inventory\", \"/hanley/cmms/view/inventory\")") {
     h2() {
 	  "Inventory"
     }.style! 'vertical-align': :top
@@ -35,15 +35,6 @@ script {
   """
   window.name='cmms-main';
   
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('/service-worker.js')
-    .then(() => {
-      console.log('Service worker registered');
-    })
-    .catch(err => {
-      console.log('Service worker registration failed: ' + err);
-    });
-}  
+
   """
 }        

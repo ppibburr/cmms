@@ -39,6 +39,6 @@
         s=span {_}.style! cursor: :pointer,'text-overflow': :ellipsis
         s.style! color: :red if c == 3
         s.style! color: :black if c == 2
-      }.style!("min-width": q,"text-align": qq).style! 'font-family': :monospace, cursor: :pointer, 'overflow-x': :hidden
+      }.style!("min-width": q,"text-align": qq).style! cursor: :pointer, 'overflow-x': :hidden
     end
   }
