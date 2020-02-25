@@ -1,0 +1,1 @@
+Node.new(:html) {content!}

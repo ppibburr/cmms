@@ -8,6 +8,10 @@ class Numeric
   def pct
     "#{self}%"
   end
+  
+  def hex
+    "#"+to_i.to_s(16)
+  end
 end
 
 class Node
@@ -41,7 +45,8 @@ class Node
   end
   
   def add_class n
-    (self[:class] ||= "") << " #{n}"
+    (self[:class] ||= "")
+    self[:class] = self[:class].split(" ").reverse().push(n).reverse.join(" ")
     self
   end
   
@@ -50,8 +55,9 @@ class Node
   end
   
   def to_s
-    self[:style] = style!.to_s
+    (self[:style] ||="")
     res = (@b ? instance_exec(@b.binding, &@b) : nil)
+    (self[:style] ||="") << ";"+style!.to_s
     (@children ||= [])
     @children << res unless res.is_a?(Node) || !res || res.is_a?(Array)
     "<#{tag} #{attributes.map do |k,v| "#{k}=#{v.is_a?(String) ? "'#{v.strip}'" : v}".strip end.join(" ")}>"+
@@ -60,7 +66,8 @@ class Node
   end
 
   def << e
-    (@children ||= []) << e
+    (@children ||= [])
+    @children << e unless @children.index(e) if e.is_a?(Node)
   end
 
   def + o
@@ -88,11 +95,80 @@ class Node
   end
 end
 
+class DataView < Node
+  def initialize root, o={}, &b
+    @init = b
+    @data = o.delete(:data)
+    @container = o.delete(:container)
+    super root, o do
+     
+    end
+    add_class 'data-view'
+  end
+
+  def render item=nil
+    if !item
+      do_init()
+    else
+      do_item(item)
+    end
+  end
+  
+  def do_init()
+    instance_exec &@init
+        
+    data.each do |item|
+      render item  
+    end
+  end
+  
+  def do_item(item)
+    this = self;cb=@item
+    container(class: 'data-view-container') {
+      instance_exec(this, [item].flatten, &cb).each_with_index do |h,i|
+        self << this.contain(self, h,i)
+      end
+    }
+  end
+
+  def item &b
+    @item = b
+    self
+  end
+  
+  def data d=nil
+    return @data unless d
+    @data = d
+  end
+  
+  def container h={}, &b
+    send(@container, h, &b)
+  end
+  
+  def contain parent, h, i
+    return h if h.is_a?(Node)
+    parent.div() {h}
+  end
+  
+  def to_s
+    render
+    super
+  end
+end
+
+
+class Array
+  def rgba
+    "rgba(#{self.join(",")})"
+  end
+end
+
+
 def ele t,*o,&b; Node.new(t,*o,&b); end
 
 class Node
   attr_reader :children
-  [:div,:para,:pre,:code, :small, :head, :button,:title, :link, :label,:meta, :datalist,:option,:h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
+  [:div,:para,:pre,:code, :small, :body,:head, :button,:title, :link, :label,:meta, :datalist,:option,:h1,:h2,:h3, :u, :a, :b, :em, :span,:img,:form,:input,:select,:option,:textarea,:header,:grid,:table,:td,:tr,:script,:style,:hr,:content,:article,:footer].each do |t|
     define_method t do |*o,&b|
       (@children ||= []) << e=ele(t,*o,&b)
       @children.last
@@ -105,11 +181,12 @@ class Node
   end
   
   def style! h=nil
-    return (self[:style] ||= Style.new) if !h
-    s = (self[:style] ||= Style.new)
+    return (@style ||= Style.new) if !h
+    (@style ||= Style.new)
     h.each_pair do |k,v| 
-      s[k.to_s]=v
+      @style[k.to_s]=v
     end
+    
     return self
   end
 end
@@ -118,11 +195,150 @@ class Style < Hash
   def to_s
     
     map do |k,v|
-      "#{k}: #{v};"
-    end.join("\n")
+      "#{k.to_s.gsub("_",'-')}: #{v};"
+    end.join("")
     
   end
+  
+  def [] k
+    super(k.to_s.gsub("_","-"))
+  end
+  
+  def []= k,v
+    if !v
+      return delete(k.to_s.gsub("_","-"))
+    end
+    super(k.to_s.gsub("_","-"), v)
+  end  
+  
+  def delete k
+    super k.to_s.gsub("_", '-')
+  end
+  
+  def keys
+    super.map do |k| k.gsub("-", '_').to_sym end
+  end
+  
+  def has_key? k; keys.index(k.to_s.gsub("-",'_').to_sym); end
+  
+  def each_pair &b
+    super do |k,v|
+      b.call(k.gsub("-",'_').to_sym) if b 
+    end
+  end
+  
+  def each &b
+    each_pair do |k,v|
+      b.call [k,v] if b
+    end 
+  end
+  
+  def map &b
+    keys.map do |k| b.call [k, self[k]] if b end
+  end
 end
+
+
+def rule r, h={}
+  s=(($CSS ||= {})[r] ||= Style.new())
+  h.each_pair do |k,v|
+    s[k.to_s.gsub("_",'-')] = v
+  end
+
+  s
+end
+
+rule '.flex-column',
+  display: :flex,
+  flex_direction: :column,
+  flex: 1
+rule '.flex-row',
+  display: :flex,
+  flex_direction: :row,
+  flex: 1
+rule '.flex',
+  flex: 1    
+  
+rule '.viewport',
+  padding:0,
+  margin:0,
+  min_height: 100.vh,
+  max_height: 100.vh,
+  min_width:  100.vw,
+  max_width:  100.vw   
+
+class List2 < DataView
+  rule '.list', 
+    display:        :flex,
+    flex_direction: :column,
+    flex:           1
+  rule '.list-row',
+    background_color: :azure,
+    border: 'solid 1px teal'    
+  rule'.list-row-item',
+    color: 0x1f1f7b.hex
+  rule '.list-header',
+    background_color: 0x000.hex
+  rule '.list-header-item',
+    color: :blue,
+    border: 'solid 1px blue'
+
+  
+  
+  attr_reader :columns, :headers
+  def initialize o={}, &b
+    @columns = o.delete :columns
+    @headers  = o.delete :headers
+    
+    @header = proc do
+      @headers.map do |h| div() {h} end
+    end
+    
+    o[:container] = :div
+    
+    super(:div, o) do
+      instance_exec &b
+      do_header()
+    end
+    
+    add_class 'list flex-column'
+  end
+  
+  def header &b
+    @header = b
+    self
+  end
+  
+  def do_header()
+    this = self; cb=@header 
+    container() {
+      style! flex: 0
+      add_class 'flex-row list-header'
+      instance_exec(this, @headers, &cb).each_with_index do |h,i|
+        self << this.contain(self,h,i).add_class("list-header-item")
+      end
+    }
+  end  
+  
+  def container h={}, &b 
+    c = super(h) do
+      add_class'flex-row list-row'
+      self.style! display: :flex, flex: 0
+      instance_exec &b
+    end
+  end
+  
+  def contain parent, n, i
+    c=n
+    unless n.is_a?(Node)
+      c = parent.span() {n}
+    end
+    c.add_class "flex-row-item list-row-item"
+    c.style! flex: columns[i], min_width: 20.px
+  end
+end
+
+
 
 class FlexRow < Node
   def initialize *o,&b
