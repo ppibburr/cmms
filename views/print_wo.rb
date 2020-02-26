@@ -80,7 +80,7 @@ row() {
 self << FlexTable.new() {
   (o["tasks"] || []).each do |t|
     next unless t 
-    t=http(:get, :tasks, t["_id"]) 
+    
     row() {
       code() {span() {t["craft"].ljust(8).gsub(" ", "&nbsp;")}
       span() {t["description"]}
