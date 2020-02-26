@@ -1,7 +1,7 @@
 id = data["id"]
 
 o = find_one(:workorders, order: id.to_i)
-e = find_one(:equipment, order: o["equip"])
+e = find_one(:equipment, order: o["equip"].to_i)
 e ||= {
   "name": "null",
   "location": "null"
