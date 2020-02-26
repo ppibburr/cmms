@@ -1,1 +1,1 @@
-Node.new(:div) {view('error2',params: {type: 404})}
+Node.new(:div) {view('error2',site: renders.site, request: renders.request)}

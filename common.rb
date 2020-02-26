@@ -1,1 +1,1 @@
-Node.new(:html) {content!}
+Node.new(:html) {renders.content!}

@@ -6,10 +6,11 @@ def $CSS.to_s
   end.join("\n")
 end
 
-q=Node.new(:html, class: 'viewport') {
-  style() {$CSS.to_s}
-  body(class: 'viewport') {
-    self << List2.new(headers: ["Col 0", "Col 1"], columns: [0,1]) {
+#q=Node.new(:html, class: 'viewport') {
+  #style() {$CSS.to_s}
+  #body(class: 'viewport') {
+    #self << 
+    List2.new(headers: ["Col 0", "Col 1"], columns: [0,1]) {
       data([[1,2],[1,2]])
     }.header() {|list, headers|
       ["one","two","three"] 
@@ -18,9 +19,9 @@ q=Node.new(:html, class: 'viewport') {
         span() {i}.style! color: :red
       end
     }
-  }
-}
+ # }
+#}
 
-puts q
+
 
 __END__
