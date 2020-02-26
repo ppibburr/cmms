@@ -27,7 +27,7 @@ class WorkOrders < FlexTable
 			if (event.key === 'Enter') {
 				event.preventDefault();
 				id('new').blur();
-				popup('/create/workorder?description='+encodeURI(id('new').value)+'&department=Manufacturing');
+				popup('/create/workorder?description='+encodeURI(id('new').value)+'&department=manufacturing');
 				id('new').value = '';
 
 				

@@ -19,21 +19,30 @@ end
 end
 
 def page(file, site: nil, request: Marshal.dump(nil), params: {})
+  file = "./sites/#{site}/"+file+".rb"
   unless File.exist?(file)
     file = "./pages/#{File.basename(file)}"
+ 
+    unless File.exist?(file)
+      return page('404', site: site, request: request, params: params)
+    end 
   end
   
-  IO.popen('ruby ./mk_page.rb') do |io,_|
-    io.puts({file: file, site: site, request: request, params: params}.to_json)
-    return io.read
+  Open3.popen3('ruby ./mk_page.rb') do |i,o,e,_|
+    i.puts({file: file, site: site, request: request, params: params}.to_json)
+    return o.read
   end 
 end
 
 require 'open3'
 def view(file, site: nil, request: Marshal.dump(nil), params: {})
-file=file+".rb"
+  file=file+".rb"
   unless File.exist?(file)
     file = "./views/#{File.basename(file)}"
+  
+    unless File.exist?(file)
+      return view('error2', site: site, request: request, params: params)
+    end
   end
   
   Open3.popen3('ruby ./render.rb') do |i,o,_|
