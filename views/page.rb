@@ -2,17 +2,21 @@ require './build'
 require 'json'
 require "./tool"
 
-obj   = JSON.parse(gets)
-view  = obj["view"]
+obj      = JSON.parse(gets)
+view     = obj["view"]
 d = data = obj["data"]
-title = obj["title"]
-
+title    = obj["title"]
+def meta(h={}, &b)
+  Node.new(:meta, h, &b)
+end
 puts(Node.new(:html) {
   head() { 
     title {"Hanley CMMS | #{title}"}
-    self << '<link rel="manifest" href="/manifest.json">'
-    self << '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
-    self << '<meta name="mobile-web-app-capable" content="yes">'
+
+    meta name:"viewport", content:"width=device-width, initial-scale=1.0"
+    meta name:"mobile-web-app-capable", content:"yes"
+    
+        self << '<link rel="manifest" href="/manifest.json">'
     link(rel: "stylesheet", href: "/css/default.css")
     script(src: "/js/core.js")  
     script {"window.site_root = '#{"/hanley/cmms/"}';"}
