@@ -8,7 +8,7 @@ end
         [],
         [:ASAP,:EMERG,:SCHD],
         [:REACT,:PM,:SAFETY, :PROJ],
-        [:ELE,:PM,:MECH,:CONTRACT,:CTRL,:Packaging, :Manufacturing, :Thinbrick, :Warehouse, :Magroom, :Grinding, :Crushing, :Scrubber, :Kiln, :Haulage]
+        [:ELE,:PM,:MECH,:CONTRACT,:CTRL,:packaging, :panufacturing, :thinbrick, :warehouse, :Magroom, :Grinding, :Crushing, :Scrubber, :Kiln, :Haulage]
       ]
 
       List.new(id: 'orders', grow_rows: true, columns: [0,0,0,0,1], header: ["", :ID, :Urgency, :Type, :Task], data: d.reverse) {
