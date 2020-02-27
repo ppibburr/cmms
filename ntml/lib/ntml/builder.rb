@@ -540,3 +540,9 @@ def ele t,*o,&b; Node.new(t,*o,&b); end
 def html o={},&b
   ele :html, o, &b
 end
+
+def ele t,*o,&b; Node.new(t,*o,&b); end
+
+def html o={},&b
+  ele :html, o, &b
+end
