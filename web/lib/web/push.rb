@@ -20,7 +20,8 @@ class Push
   @@public_key  = PUSH["public_key"]
   
   def self.message root, obj
-    subscriptions[root].each do |sub|
+    return {status: 404} unless a=subscriptions[root]
+    a.each do |sub|
       begin
 	  Webpush.payload_send(
 		message:  obj.to_json,
@@ -43,6 +44,7 @@ class Push
 	    
 	  end
     end
+    {status: 200}
   end
   
   def self.register root, sub
@@ -53,12 +55,13 @@ class Push
     @subscriptions ||= {} 
   end
   
-  def self.routes root, ins
-    ins.instance_exec do
-		post "#{root}/api/push/register" do
+  def self.routes this
+    this.instance_exec do
+      Dir.glob("./sites/*.rb").to_a.push("").each do |f|
+		post "#{root=File.basename(f).split(".")[0]}/api/push/register" do
 		  puts obj=JSON.parse(request.body.read)
 		  Push.register root, obj
-		  "{}"
+		  {status: 200}.to_json
 		end
 		
 		post "#{root}/api/push/subscription/changed" do
@@ -69,9 +72,9 @@ class Push
 		end		
 
 		post "#{root}/api/push" do
-		  Push.message root, JSON.parse(request.body.read)
-		  "{}"
+		  Push.message(root, JSON.parse(request.body.read)).to_json
 		end    
+      end
     end
   end
 end

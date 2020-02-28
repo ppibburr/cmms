@@ -175,6 +175,7 @@ body {
   
 }
 
+
 @media only screen and (max-width: 450px) {
   .invadd {
     min-width: 80vw;
@@ -208,6 +209,7 @@ body {
   box-shadow: unset;
 }
 }
+
 
 .id {
   min-width: 20px !important

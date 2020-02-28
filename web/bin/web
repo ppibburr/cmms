@@ -20,7 +20,7 @@ get "/" do
 end
 
 get "/:site" do
-  page("main", site: site, request: request)
+  page("main", site: params[:site], request: request)
 end
 
 get "/:site/:page" do
@@ -35,4 +35,6 @@ post "/:site/:page/:view/render" do
   view(params[:view], site: params[:site], request: request).render(JSON.parse(request.body.read)).to_s
 end
 
-
+if true
+  Push.routes self
+end
