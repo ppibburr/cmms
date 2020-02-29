@@ -16,23 +16,48 @@ Dir.glob('./sites/*/site.rb').each do |f|
 end
 
 get "/" do
-  page("main", site: nil, request: request)
+  render!(:page,"main", site: nil, request: request)  
 end
 
-get "/:site" do
-  page("main", site: params[:site], request: request)
+get "/manifest.json" do
+  send_file "./public/manifest.json"
 end
 
-get "/:site/:page" do
-  page(params[:page], site: params[:site], request: request).to_s
+get "/:site/manifest.json" do
+  send_file "./public/manifest.json"
 end
 
-post "/:site/:page/render/:view" do
-  view(params[:view], site: params[:site], request: request).to_s  
+get "/:site/?" do
+    unless File.exist?("./pages/#{params[:site]}.rb")
+      next render!(:page,"main", site: params[:site], request: request)
+    end
+
+    render!(:page,params[:site], site: nil, request: request)
 end
 
-post "/:site/:page/:view/render" do
-  view(params[:view], site: params[:site], request: request).render(JSON.parse(request.body.read)).to_s
+get "/:site/:page/?" do
+  render!(:page,params[:page], site: params[:site], request: request)
+end
+
+post "/:site/:page/render/:view/?" do
+    render!(:view,params[:view], site: params[:site], request: request)  
+end
+
+class Sinatra::Application
+  def render! type, q, site: nil, request: {}, &b
+    send_file "./public/service-worker.js" if request.fullpath == "/service-worker.js"
+    send_file "./public/manifest.json" if request.fullpath == "/manifest.json"
+    
+    if File.exist?(path="/public"+request.fullpath) && !File.directory?(path)
+      send_file(path)
+    else
+      __send__(type, q, site: site, request: request, &b).to_s
+    end
+  end
+end
+
+post "/:site/:page/:view/render/?" do
+  render!(:view,params[:view], site: params[:site], request: request).render(JSON.parse(request.body.read)).to_s
 end
 
 if true

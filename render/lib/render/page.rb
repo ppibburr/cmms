@@ -1,8 +1,8 @@
 class Page
   attr_reader :page,:site,:request, :file
   def initialize(page,site,request)
-    @page=@page; @site = site,@request=JRequest.new(request)
-    
+    @page=@page; @site = site;@request=JRequest.new(request)
+    #p init: page
 	@file = file?(page)   
   end
   
@@ -20,10 +20,10 @@ class Page
 	file
   end
   
-  def content!
+  def content! &b
     renders=self
     file = @file 
-    eval(open(file).read, binding, file, 1).to_s
+    eval(open(file).read, b.send(:binding), file, 1)
   end
   
   def to_s

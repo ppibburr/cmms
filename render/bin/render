@@ -2,7 +2,9 @@
 
 $: << File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib')
 
+
 require 'render'
+
 
 render = ARGV.shift
 data   = nil
@@ -18,11 +20,11 @@ r=JRequest.new(JSON.parse(request||'{}'))
 case render
 when "--page"
   pg = page page, site: site, request: r
-  puts pg.to_s
+  puts pg
 when "--view"
   vw = view page, site: site, request: r
   if !data
-    puts vw.to_s
+    puts vw
   else
     puts vw.render(data) if data
   end
