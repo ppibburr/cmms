@@ -27,7 +27,7 @@ def generate_wo
   orders = {}
   
   open = find :workorders, closed: nil
-  
+  e={}
   get(:tasks).find_all do |t|
     q=Date.parse(t["next_perform"])
     (Date.today-q).to_i >= 0
@@ -41,6 +41,8 @@ def generate_wo
      date: Date.today.to_s, description: "Time Generated PM: #{t["craft"]}"
     })
     
+    t["equip-name"] = (e[t["equip"]]||=find_one(:equipment, order: t["equip"]))["name"]
+    t["department"] = e[t["equip"]]["department"]
     o[:tasks] << t
   end
   
