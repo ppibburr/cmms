@@ -34,11 +34,11 @@ def generate_wo
   end.find_all do |t|
     !open.find do |wo| wo["tasks"].map do |wt| wt["_id"] end.index t["_id"] end
   end.each do |t|
-    o = (orders[t["equip"]] ||= {tasks: [],
+    o = (orders[t["craft"]] ||= {tasks: [],
      equip: t["equip"],
      type: "PM", priority: "ASAP",
      dept: find_one(:equipment, order: t["equip"])["department"],
-     date: Date.today.to_s, description: "Time Generated PM"
+     date: Date.today.to_s, description: "Time Generated PM: #{t["craft"]}"
     })
     
     o[:tasks] << t
