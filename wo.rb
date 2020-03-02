@@ -37,7 +37,7 @@ def generate_wo
     q=(e[t["equip"]]||=find_one(:equipment, order: t["equip"]))
   
     o = ((orders[t["craft"]]||={})[q["department"]] ||= {tasks: [],
-     equip: "MISC",
+     equip: "#{t["craft"]} routine",
      type: "PM", priority: "ASAP",
      dept: "#{q["department"]}",
      date: Date.today.to_s, description: "Time Generated PM: #{t["craft"]}"
