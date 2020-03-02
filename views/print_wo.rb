@@ -3,8 +3,8 @@ id = data["id"]
 o = find_one(:workorders, order: id.to_i)
 e = find_one(:equipment, order: o["equip"].to_i)
 e ||= {
-  "name": "null",
-  "location": "null"
+  "name": "MISC",
+  "location": "PLANT"
 }
 style() {
   """
@@ -83,6 +83,9 @@ self << FlexTable.new() {
     
     row() {
       code() {span() {t["craft"].ljust(8).gsub(" ", "&nbsp;")}
+      code() {span() {t["department"].ljust(18).gsub(" ","&nbsp;")}}
+      code() {span() {t["equip-name"]} }
+
       span() {t["description"]}
       span() {" ____________"}
     }}.style!(flex: 0)
