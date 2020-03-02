@@ -13,14 +13,14 @@ row() {
     "REACT",
   ], value: order["type"])
 
-  self << DataList.new( id: :department, value: order["department"], label: "Dept", options: get(:departments).map do |dept| dept["name"] end.sort)
+  self << DataList.new( id: :department, value: order["dept"], label: "Dept", options: get(:departments).map do |dept| dept["name"] end.push("pm").sort)
 
   list = find(:equipment, department: order["department"]).map do |e|
      e["order"].to_s+" "+e["name"]
   end
 
   equip = find(:equipment, order: order["equipment"]) || []
-  equip = equip[0] || {"name":""}
+  equip = equip[0] || {"name":"MISC equipment"}
   equip = equip["name"]
 
   self << DataList.new(id: :equipment, label: "Equip", options: list, value: equip)
@@ -54,7 +54,7 @@ div() {
   }.style! height: "fit-content",flex: 0  
 }.style! display: :flex, "flex-direction": "row", flex: 0,"min-height": "fit-content"
 
-self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0, 1] ,data: (data["tasks"]||[]).map do |t| [t["interval"],t["craft"], t["description"]] end) {
+self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0,1,1, 3] ,data: (data["tasks"]||[]).map do |t| [t["interval"],t["craft"], (e=find_one(order: t["equip"]))["dept"], e["name"], t["description"]] end) {
   this=self
   render do |_,r,c|
     ele(:div) {

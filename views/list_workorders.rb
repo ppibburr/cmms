@@ -24,7 +24,7 @@ end
             next _ if c < 4
             div() {
               div() {
-                ((find(:equipment,order: _["equip"]) || [])[0] || {"name": ""})["name"]
+                ((find(:equipment,order: _["equip"]) || [])[0] || {"name": "MISC equipment"})["name"]
               }.style! color: :"#3B3B44", height: 1.em, 'overflow-x': :hidden
            
               div() {
