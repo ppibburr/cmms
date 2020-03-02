@@ -450,3 +450,26 @@ def html o={},&b
   ele :html, o, &b
 end
 
+class Html < Node
+  def initialize *o,&b
+    super :html, *o,&b
+    this=self
+    @head=ele(:head) do
+      this.do_head
+    end
+    @children ||= []
+    @children.unshift @head     
+  end
+  def head &b
+    p :head
+    (@head_cba||=[]) << b
+  end
+  
+  def do_head
+  p :do 
+    @head_cba.each do |b|
+      @head.instance_exec &b
+    end
+  end
+end
+

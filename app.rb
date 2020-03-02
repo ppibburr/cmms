@@ -184,15 +184,11 @@ Push.routes '/hanley/cmms', self
 
 post '/hanley/cmms/api/:thing' do
   content_type "text/json"
-  p :POST
-  p obj = JSON.parse(request.body.read.to_s)
+  obj = JSON.parse(request.body.read.to_s)
   if !obj.is_a?(Array)
     obj["order"] = DB[params[:thing]].distinct("order").sort.last+1 rescue 1
-    p 1
     oid = DB[params[:thing]].insert_one(obj)
-    p 2
     oid=oid.inserted_id
-    p 2
     next "{\"_id\": \"#{oid.to_s}\", \"order\": #{obj["order"]}}"
   else
     order = DB[params[:thing]].distinct("order").sort.last || 0 rescue 0
