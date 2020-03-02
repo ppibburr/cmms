@@ -54,7 +54,7 @@ div() {
   }.style! height: "fit-content",flex: 0  
 }.style! display: :flex, "flex-direction": "row", flex: 0,"min-height": "fit-content"
 
-self << List.new(header: ["Interval", "Craft", "Description"], columns: [0, 0,1,1, 3] ,data: (data["tasks"]||[]).map do |t| [t["interval"],t["craft"], (e=find_one(order: t["equip"]))["dept"], e["name"], t["description"]] end) {
+self << List.new(header: ["Interval", "Craft", "Dept","Equip" "Description"], columns: [0, 0,1,1, 3] ,data: (data["tasks"]||[]).map do |t| [t["interval"],t["craft"], (e=find_one(order: t["equip"]))["dept"], e["name"], t["description"]] end) {
   this=self
   render do |_,r,c|
     ele(:div) {
