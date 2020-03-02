@@ -34,20 +34,26 @@ def generate_wo
   end.find_all do |t|
     !open.find do |wo| wo["tasks"].map do |wt| wt["_id"] end.index t["_id"] end
   end.each do |t|
-    o = (orders[t["craft"]] ||= {tasks: [],
+    q=(e[t["equip"]]||=find_one(:equipment, order: t["equip"]))
+  
+    o = ((orders[t["craft"]]||={})[q["department"]] ||= {tasks: [],
      equip: "MISC",
      type: "PM", priority: "ASAP",
-     dept: "PM",
+     dept: "#{q["department"]}",
      date: Date.today.to_s, description: "Time Generated PM: #{t["craft"]}"
     })
     
-    t["equip-name"] = (e[t["equip"]]||=find_one(:equipment, order: t["equip"]))["name"]
-    t["department"] = e[t["equip"]]["department"]
+    t["equip-name"] = q["name"]
+    t["department"] = q["department"]
     o[:tasks] << t
   end
   
   puts(orders.map do |k,v| v end)
-  a = orders.map do |k,v| v end
+  a = orders.map do |k,v| 
+   v.map do |kk,vv|
+     vv
+   end
+  end.flatten
   a.every(10).each do |s|
     create_many :workorders, s
   end
