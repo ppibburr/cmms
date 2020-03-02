@@ -141,7 +141,7 @@ class DataView < Node
   def do_item(item)
     this = self;cb=@item
     container(class: 'data-view-container') {
-      instance_exec(this, [item].flatten, &cb).each_with_index do |h,i|
+      instance_exec(this, item.is_a?(Hash) ? item : [item].flatten, &cb).each_with_index do |h,i|
         self << this.contain(self, h,i)
       end
     }

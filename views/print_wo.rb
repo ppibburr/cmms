@@ -84,6 +84,7 @@ self << FlexTable.new() {
     row() {
       code() {span() {t["craft"].ljust(8).gsub(" ", "&nbsp;")}
       span() {t["description"]}
+      span() {" ____________"}
     }}.style!(flex: 0)
   end
 }.style!(flex:2)
