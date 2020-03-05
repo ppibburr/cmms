@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+$: << File.join(File.expand_path(File.dirname(__FILE__)), '..', 'lib')
+
+
+require 'render'
+
+opts={}
+
+ARGV.find_all do |a|
+  if a =~ /\-\-(.*)\=(.*)/
+    #ARGV.delete a
+    if $1 == "request"
+      opts[:request] = JSON.parse($2)
+    elsif $1 == "render"
+      opts[:render] = JSON.parse($2)
+    else
+      opts[$1.to_sym] = $2 
+    end
+  end
+end
+$: << File.expand_path(File.join(File.dirname(__FILE__), "..","..","store", "lib"))
+require 'store'
+$store = Store.new(opts[:site] ||= 'main')
+
+r=JRequest.new(JSON.parse(opts[:request]||'{}'))
+p opts
+
+params=opts.clone
+params.delete :request
+
+if !opts[:view] && !opts[:item]
+  pg = page opts[:page], site: opts[:site], request: r
+  puts pg
+elsif opts[:view]
+  vw = view opts[:view].to_s, site: opts[:site], request: r, params: params
+  if !opts[:render]
+    puts vw
+  else
+    puts vw.render(opt[:render])
+  end
+elsif opts[:item]
+  opts[:view]=opts[:page].to_s+"/item"
+  vw = view opts[:view], site: opts[:site]||'main', request: r, params: params
+  if !opts[:render]
+    puts vw
+  else
+    puts vw.render(opts[:render])
+  end
+end

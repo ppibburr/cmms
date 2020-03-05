@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+$: << File.expand_path(File.join(File.dirname(__FILE__),'..','lib'))
+$: << File.expand_path(File.join(File.dirname(__FILE__),'..', '..', 'render','lib'))
+$: << File.expand_path(File.join(File.dirname(__FILE__),'..', '..', 'store','lib'))
+
+require 'sinatra'
+require 'render'
+require 'web/request'
+require 'web/push'
+require 'store'
+def routes &b
+  $routes[site=File.basename(File.dirname(caller[0].split(":")[0]))] = b  
+end
+
+Dir.glob('./sites/*/site.rb').each do |f|
+  require f
+end
+
+get "/" do
+  render!(:page,"main", site: nil, request: request, params: params)  
+end
+
+get "/manifest.json" do
+  send_file "./public/manifest.json"
+end
+
+get "/:site/manifest.json" do
+  send_file "./public/manifest.json"
+end
+
+get "/:site/?" do
+    unless File.exist?("./pages/#{params[:site]}.rb")
+      next render!(:page,"main", site: params[:site], request: request, params: params)
+    end
+
+    render!(:page,params[:site], site: nil, request: request, params: params)
+end
+
+get "/:site/:page/?" do
+  unless File.exist?("./pages/#{params[:site]}.rb")
+    next render!(:page,params[:page], site: params[:site], request: request, params: params)
+  end
+
+  params[:item] = params[:page]
+  params[:page] = params[:site]
+  
+  next render!(:view,params[:site]+"/item", site: nil, request: request, params: params)
+end
+
+get "/:site/:page/:item/?" do
+  render!(:view,params[:page]+"/item", site: params[:site], request: request, params: params)
+end
+
+post "/:site/:page/render/:view/?" do
+    render!(:view,params[:view], site: params[:site], request: request, params: params)  
+end
+
+class Sinatra::Application
+  def render! type, q, site: nil, request: {}, params: self.params, &b
+    send_file "./public/service-worker.js" if request.fullpath == "/service-worker.js"
+    send_file "./public/manifest.json" if request.fullpath == "/manifest.json"
+    
+    if File.exist?(path="/public"+request.fullpath) && !File.directory?(path)
+      send_file(path)
+    else
+      __send__(type, q, site: site, request: request, params: params, &b).to_s
+    end
+  end
+end
+
+post "/:site/:page/:view/render/?" do
+  render!(:view,params[:view], site: params[:site], request: request, params: params).render(JSON.parse(request.body.read)).to_s
+end
+
+if true
+  Push.routes self
+end
+
