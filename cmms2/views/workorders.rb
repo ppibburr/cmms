@@ -26,7 +26,7 @@ self << List2.new(columns: [1,4], headers: ["",""], data: $store.get(:workorders
       
       div { span(class: 'tag wo-type')  {o["type"]}}
     }.style! "text-align": :center
-  }, div(id: o["_id"], onclick: "view(\"/workorders/#{o['_id']}\")") {
+  }, div(id: o["_id"], onclick: "popup(\"/workorders/#{o['_id']}\",\"WorkOrder: #{o["order"]}\")") {
     div {
       (t=$store.get(:tasks,  _id: o["tasks"][0]))
       $store.get(:equipment, _id: t["equipment"])["department"].capitalize

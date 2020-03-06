@@ -132,6 +132,7 @@
 }
 
 .popup {
+  display: none;
   flex:0;
   min-height: 82vh;
   max-height: 82vh;
@@ -140,6 +141,10 @@
   border-radius: 0.1em;
   background-color: aliceblue;
   box-shadow: 10px 10px 8px #282020;
+}
+
+#popup:target {
+  display:block;
 }
 
 .link {

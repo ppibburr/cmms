@@ -40,6 +40,51 @@ body {
     border-radius: 0.3em;
 }
 
+.popup {
+  flex:0;
+  min-height: 78vh;
+  max-height: 78vh;
+  margin: 12vh 11vw;
+  width: 78vw;
+  border: ridge;
+  border-radius: 0.1em;
+  background-color: aliceblue;
+  box-shadow: 10px 10px 8px #282020;
+}
+
+#popup {      
+    display: none;
+    position: relative;
+    left: -600px;
+    background: blue;
+    -webkit-animation: slide 0.2s forwards;
+    -webkit-animation-delay: 1s;
+    animation: slide 0.2s forwards;
+    animation-delay: 0s;
+
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0; /*left: 0;*/
+  background-color: rgba(39, 55, 77, 0.59);
+  z-index: 100;            
+}
+@-webkit-keyframes slide {
+    100% { left: 0; }
+}
+
+@keyframes slide {
+    100% { left: 0; }
+}
+
+#popup:target {
+  display:block;
+}
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
 @media only screen and (max-width: 450px) {
   .invadd {
     min-width: 80vw;
@@ -62,6 +107,15 @@ body {
     border: unset;
   }
 
+#popup {      
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0; /*left: 0;*/
+  background-color: rgba(39, 55, 77, 0.59);
+  display: none ;
+  z-index: 100;            
+}
 .popup {
   flex:0;
   min-height: 100vh;
@@ -74,26 +128,48 @@ body {
 }
 }
 
+#popup-title {
+min-width: 12vw;
+    background-color: #0a2a46;
+    display: inline-block;
+    color: azure;
    
+   }
 """  
   }
 }
 
-div id: :wo
 input(id: :new, type: :text, placeholder: "What needs done?").style! 'border-color': 'lightblue', display: :block, "font-size": "x-large", margin: :auto, "margin-top": 0.6.em, "min-width": 'calc(80%)'   , 'margin-bottom': 0.6.em 
       
 v=view("workorders")[-1]
 
 span() {"There are: #{v.data.length} open orders"}.style! flex:0
-end
 
 script {
   """
-  function view(u) {
-    http(u, function(h) {
-      e = id('popup');
-      e.innerHTML = h;
-    }); 
+  function view(u,after) {
+    fetch(u)
+    .then((response) => {
+      return response.text();
+    })
+    .then((json) => {
+      //console.log(json);
+      if (after) {
+        after(json);
+      }
+    });
+  }
+  
+  function id(i) {
+    return document.getElementById(i);
+  } 
+  
+  function popup(u,title) {
+    view(u, function(h) {
+      id('popup-title').innerText=title;
+      window.location = '#popup';
+      id('popup-content').innerHTML = h; 
+    });
   }
   """
 }

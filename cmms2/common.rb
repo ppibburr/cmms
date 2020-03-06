@@ -15,11 +15,11 @@ rule "body",
 
 rule '.main', 
   margin: :auto,
-  min_width: 80.vw,
-  max_width: 80.vw,
-  max_height: 80.vh,
-  min_height: 80.vh,
-  margin_top: 10.vh
+  min_width: 82.vw,
+  max_width: 82.vw,
+  max_height: 88.vh,
+  min_height: 88.vh,
+  margin_top: 5.vh
 rule 'content'  
 
 Html.new() {
@@ -104,12 +104,21 @@ navigator.serviceWorker.ready
     }
   }
 
+  
+  
   body(class: 'viewport') {
     div(class: 'flex-column main') {
        img(src: "/img/gg-logo.jpg", onclick: 'open_window("cmms-main","/hanley-cmms")') {}.style! margin: :auto, flex: 0
        div(class: 'content flex-column') {
          renders.content! do end
        }.style! flex: 1
+    }
+
+    div(id: 'popup', class: 'flex-column') {;
+      div(id: 'popup-inner', class: 'popup flex-column') {
+        span(id: 'popup-title') {""}
+        div(id: 'popup-content', class: 'flex-column') {}.style! flex:1
+      }.style! flex:1
     }
   }
   

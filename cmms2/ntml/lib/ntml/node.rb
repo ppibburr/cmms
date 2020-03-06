@@ -177,14 +177,14 @@ class DataView < Node
 end
 
 class List2 < DataView
-  rule '.list'
+  rule '.list', height: 20.px
   rule '.list-inner .list-row',
     background_color: :azure#,
     #border: 'solid 1px teal' 
   rule '.list-inner .list-row:nth-child(odd)',  background: 0xfafbfc.hex
   rule '.list-inner .list-row:nth-child(even)', background: :white       
   rule '.list-inner .list-row-item'#,
-    #color: 0x1f1f7b.hex
+    #color: 0x1f1f7b.hex,
   rule '.list-header',
     background_color: 0x36393C.hex,    color: :azure
   
@@ -235,7 +235,7 @@ class List2 < DataView
       add_class'flex-row list-row'
       self.style! display: :flex, flex: 0
       instance_exec &b
-    end
+    end.style! flex: 1
   end
   
   def contain parent, n, i
@@ -244,7 +244,7 @@ class List2 < DataView
       c = parent.span() {n}
     end
     c.add_class "flex-row-item list-row-item"
-    c.style! flex: columns[i], min_width: 2.em
+    c.style! flex: 1+columns[i], min_width: 2.em
   end
 end
 

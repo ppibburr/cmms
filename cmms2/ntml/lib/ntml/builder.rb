@@ -70,6 +70,8 @@ class Style < Hash
   def map &b
     keys.map do |k| b.call [k, self[k]] if b end
   end
+  
+
 end
 
 
