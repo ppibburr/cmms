@@ -37,13 +37,13 @@ get "/:site/?" do
 end
 
 get "/:site/:page/?" do
-  unless File.exist?("./pages/#{params[:site]}.rb")
+  unless File.exist?("./pages/#{params[:site]}.rb") 
     next render!(:page,params[:page], site: params[:site], request: request, params: params)
   end
 
   params[:item] = params[:page]
   params[:page] = params[:site]
-  
+
   next render!(:view,params[:site]+"/item", site: nil, request: request, params: params)
 end
 
@@ -60,7 +60,7 @@ class Sinatra::Application
     send_file "./public/service-worker.js" if request.fullpath == "/service-worker.js"
     send_file "./public/manifest.json" if request.fullpath == "/manifest.json"
     
-    if File.exist?(path="/public"+request.fullpath) && !File.directory?(path)
+    if File.exist?(path="./public"+request.fullpath) && !File.directory?(path)
       send_file(path)
     else
       __send__(type, q, site: site, request: request, params: params, &b).to_s
