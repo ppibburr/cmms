@@ -125,6 +125,7 @@ body {
   border-radius: 0.1em;
   background-color: aliceblue;
   box-shadow: unset;
+  width:100vw;
 }
 }
 

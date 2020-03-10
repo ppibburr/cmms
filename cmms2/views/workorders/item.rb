@@ -61,7 +61,7 @@ style {
   
   def list
       this = self
-      List2.new(headers: ["","","",""], columns: [0,0,0,1]) {
+      List2.new(headers: ["","","",""], columns: [0,0,0,4]) {
         data($store.get(:workorders,_id: this.params[:item])['tasks'].map do |t| [t] end)
    
       }.header() {
