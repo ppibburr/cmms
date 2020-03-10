@@ -1,0 +1,12 @@
+
+[1mFrom:[0m /home/ppibburr/git/cmms/cmms2/tool.rb @ line 31 :
+
+    [1;34m26[0m: require [31m[1;31m'[0m[31mpry[1;31m'[0m[31m[0m
+    [1;34m27[0m: store = [1;34;4mStore[0m.new([31m[1;31m'[0m[31mhanley-cmms[1;31m'[0m[31m[0m)
+    [1;34m28[0m: require [31m[1;31m'[0m[31msinatra[1;31m'[0m[31m[0m
+    [1;34m29[0m: store.routes [1;36mself[0m
+    [1;34m30[0m: [1;34;4mThread[0m.new [32mdo[0m
+ => [1;34m31[0m: binding.pry
+    [1;34m32[0m: [32mend[0m
+    [1;34m33[0m: [32mend[0m
+

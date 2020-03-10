@@ -182,7 +182,7 @@ class List2 < DataView
     background_color: :azure#,
     #border: 'solid 1px teal' 
   rule '.list-inner .list-row:nth-child(odd)',  background: 0xfafbfc.hex
-  rule '.list-inner .list-row:nth-child(even)', background: :white       
+  rule '.list-inner .list-row:nth-child(even)', background: :azure       
   rule '.list-inner .list-row-item'#,
     #color: 0x1f1f7b.hex,
   rule '.list-header',

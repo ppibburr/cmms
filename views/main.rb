@@ -1,8 +1,14 @@
-
+script {
+  """
+  function open_window(a,b) {
+    window.location = b;
+  } 
+  """
+}
 row() {
   div().style! flex: 1
   
-  div(onclick: "open_window(\"workorders\", \"/hanley/cmms/view/workorders\")"){
+  div(onclick: "open_window(\"workorders\", \"/hanley-cmms/workorders\")"){
     h2() {
 	  "Work Orders"
     }.style! 'vertical-align': :top
@@ -10,14 +16,14 @@ row() {
   }.style! margin: :auto, 'min-width': 20.vw, cursor: :pointer,flex:1
 
 
-  div(onclick: "popup(\"/view/departments\")"){
+  div(onclick: "view(\"/view/departments\", \"department_list\")"){
     h2() {
 	  "Equipment"
     }.style! 'vertical-align': :top
     img(src: '/img/equip.svg').style! width:3.em
   }.style! margin: '', 'min-width': 20.vw, cursor: :pointer, flex:1, 'vertical-align': :bottom
 
-  div(onclick: "open_window(\"inventory\", \"/hanley/cmms/view/inventory\")") {
+  div(onclick: "open_window(\"inventory\", \"/hanley-cmms/inventory\")") {
     h2() {
 	  "Inventory"
     }.style! 'vertical-align': :top

@@ -33,11 +33,12 @@ def s.rule r, h={}
   s
 end  
 s.rule '.wo-date',
-  font_size: :smaller,
+  font_size: 1.1.em,
   font_weight: :bold
 
 s.rule ".wo-desc",
-  background_color: :whitesmoke
+  background_color: :whitesmoke,
+  font_size: 1.2.em
 def s.to_s
   map do |r, s|
     "#{r} {"+
