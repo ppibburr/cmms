@@ -64,5 +64,5 @@ input(id: :new, type: :text, placeholder: "What needs done?").style! 'border-col
       
 v=view("workorders")[-1]
 
-span() {"There are: #{v.data.length} open orders"}.style! flex:0
+span() {"There are: #{v.data.length} open orders, #{v.data.map do |o| o['tasks'] end.flatten.length} tasks"}.style! flex:0
 
