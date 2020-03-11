@@ -1,90 +1,10 @@
-         1
-
 $root.head() {
   title {
     "CMMS | Work Orders"
   }
   style {
 """
-      body {
-        /*text-align: -webkit-center;*/
-        background-color: #b7b7b7;
-      }
-      
-body {
-   color: #2d3033;
-   font-weight: 500;
-    line-height: 1.6;
-    font-size: 0.7125rem;
-    max-width: 100%;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: var(--color-charcoal);
-    font-family: \"Montserrat\", Helvetica, sans-serif; 
-    display: flex;
-}
 
-   .main {
-   background-color: #fafbfc; 
-   box-shadow: 10px 10px 8px #282020;
-   border-top: solid 1px #cecece;
-   border-left: solid 1px #cecece;
-   }
-   
-#new {
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 6px;
-    margin-bottom: 6px;
-    border-radius: 0.3em;
-}
-
-.popup {
-  flex:0;
-  min-height: 78vh;
-  max-height: 78vh;
-  margin: 12vh 11vw;
-  width: 78vw;
-  border: ridge;
-  border-radius: 0.1em;
-  background-color: aliceblue;
-  box-shadow: 10px 10px 8px #282020;
-}
-
-#popup {      
-    display: none;
-    position: relative;
-    left: -600px;
-    background: blue;
-    -webkit-animation: slide 0.2s forwards;
-    -webkit-animation-delay: 1s;
-    animation: slide 0.2s forwards;
-    animation-delay: 0s;
-
-  height: 100vh;
-  width: 100vw;
-  position: fixed;
-  top: 0; /*left: 0;*/
-  background-color: rgba(39, 55, 77, 0.59);
-  z-index: 100;            
-}
-@-webkit-keyframes slide {
-    100% { left: 0; }
-}
-
-@keyframes slide {
-    100% { left: 0; }
-}
-
-#popup:target {
-  display:block;
-}
-
-@keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
 @media only screen and (max-width: 450px) {
   .invadd {
     min-width: 80vw;
@@ -146,31 +66,3 @@ v=view("workorders")[-1]
 
 span() {"There are: #{v.data.length} open orders"}.style! flex:0
 
-script {
-  """
-  function view(u,after) {
-    fetch(u)
-    .then((response) => {
-      return response.text();
-    })
-    .then((json) => {
-      //console.log(json);
-      if (after) {
-        after(json);
-      }
-    });
-  }
-  
-  function id(i) {
-    return document.getElementById(i);
-  } 
-  
-  function popup(u,title) {
-    view(u, function(h) {
-      id('popup-title').innerText=title;
-      window.location = '#popup';
-      id('popup-content').innerHTML = h; 
-    });
-  }
-  """
-}

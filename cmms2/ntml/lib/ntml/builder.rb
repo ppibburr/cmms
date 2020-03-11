@@ -1,5 +1,5 @@
 class Numeric
-  [:vw,:vh,:px,:em,:rem].each do |m|
+  [:vw,:vh,:px,:em,:rem,:s].each do |m|
     define_method m do
       "#{self}#{m}"
     end
@@ -27,11 +27,14 @@ end
 
 class Style < Hash
   def to_s
-    
     map do |k,v|
-      "#{k.to_s.gsub("_",'-')}: #{v};"
+      if !v.is_a?(Hash)
+        v=v.join(" ") if v.is_a?(Array)
+        "#{k.to_s.gsub("_",'-')}: #{v};"
+      else
+        "#{k} {#{Style.new.merge(v).to_s}}"
+      end
     end.join("")
-    
   end
   
   def [] k
@@ -50,14 +53,14 @@ class Style < Hash
   end
   
   def keys
-    super.map do |k| k.gsub("-", '_').to_sym end
+    super.map do |k| k.to_s.gsub("-", '_').to_sym end
   end
   
   def has_key? k; keys.index(k.to_s.gsub("-",'_').to_sym); end
   
   def each_pair &b
     super do |k,v|
-      b.call(k.gsub("-",'_').to_sym) if b 
+      b.call(k.to_s.gsub("-",'_').to_sym) if b 
     end
   end
   
@@ -71,7 +74,10 @@ class Style < Hash
     keys.map do |k| b.call [k, self[k]] if b end
   end
   
-
+  def merge o
+    o.each_pair do |k,v| self[k] = v end
+    self
+  end
 end
 
 

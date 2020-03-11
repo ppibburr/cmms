@@ -21,6 +21,7 @@ class Inventory < View
     super :div,*o do
       add_class 'flex-column'
       this=self
+      p :inventory, _id: this.params[:item]
       o = $store.get(:inventory, _id: this.params[:item])
 
 s={}
@@ -50,25 +51,20 @@ style {
   s.to_s
 }
       div() {
-        input(type: :text, placeholder: 'location') {o['location']} 
-        input(type: :text, placeholder: 'manufacturer') {o['manufacturer']}
-        input(type: :text, placeholder: 'model') {o['model_no']}  
+        input(type: :text, placeholder: 'location', value: o['location']) 
+        input(type: :text, placeholder: 'manufacturer', value: o['manufacturer'])
+        input(type: :text, placeholder: 'model', value: o['model_no'])
       }
       div() {
-        input(type: :text, placeholder: 'price') {o['price']} 
-        input(type: :text, placeholder: 'min') {o['min']}
-        input(type: :text, placeholder: 'quantity') {o['quantity']}  
+        input(type: :text, placeholder: 'price', value: o['price']) 
+        input(type: :text, placeholder: 'min', value: o['min'])
+        input(type: :text, placeholder: 'quantity', value: o['quantity'])  
       }
 
       textarea(class: 'inv-desc') {o['description']}.style! flex:1
-      self << list
+
       span() {"$#{o['quantity'] * o['price']} worth on hand"}
     end
-  end
-  
-  def list
-      this = self
-        
   end
 end
 
