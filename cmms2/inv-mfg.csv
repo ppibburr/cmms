@@ -1,101 +1,94 @@
-robot heads frame section,,,2,,
-robot heads angle section for heads,,,4,,
-robot heads locking device,,,1,,
-robot heads center plates,,,2,,
-robot heads paddles for gripping,,,4,,
-robot heads linear bearings,,,20,,
-robot heads rails for linear bearings,,,4,,
- robot headsair cylinders for robot heads,,,2,,
-air valve/solenoid for robot head,,,2,,
-robot heads roller wheel bearings for h92,,,4,,
-Cutter,,,,,
-cutter gear for frame,,1,2,,
-cutter upper & lower pusher gears,,0,2,1250,2500
-cutter linerar bearings for uppeer & cutter lower pusher,,0,2,,
-linear bearings for cutter table,,0,2,,
-cutter rails for cutter table,,0,,,
-cutter bar stop springs,,0,,,
-cutter belts under cutter,,0,,,
-cutter belts that feed cutter,,0,,,
-cutter scrap belt under cutter,,0,,,
-Lift Table,,,,,
-lift table belts,,2,,,
-lift table raising arm,,0,,,
-lift table rod ends,,10,,,
-Extruders,,,,,
-ext. feed augers,,3,,,
-extruder points,,3,,,
-"extruder 15"" point",,2,,,
-extruder auger sections,,12,,,
-extruder starters,,3,,,
-extruder shredder knives,,6,,,
-extruder vacuum gages,,1,,,
-extruder water gage,,,,,
-extruder check valve, , ,,,
-Glaze/Slinger Booths,,,,,
-glaze/slinger booth slides and tracks for glaze/slinger boot belts thru booths,,,,,
-glaze/slinger boot belts,,,,,
-glaze/slinger boot slinger head motors,,,2,,
-glaze/slinger boot belt drive motor & gearbox,,,2,,
-Additive Room,,,,,
-additve auger for Meco,,,1,,
-additve controller for Meco,,,1,,
-additve motor for Meco,,,1,,
-additve belts for Merrick,,,3,,
-additve Control boards for Merrick,,,2,,
-additve Bearings for Merrick,,,8,,
-additve Motors/gear boxes for Merrick,,,2,,
-additve load cell for Merrick,,,2,,
-additve Encoder for Merrick,,,2,,
-additve Power supply for Merrick,,,2,,
-additve Display for Merrick,,,2,,
-additve 1 long belt for fine clay belt repl,,,2,,
-additve rollers for fine clay belts,,,4,,
-Crushing/Grinding,,,,,
-crushing/grinding jaws for crushers sets,,,2,,
-crushing/grinding teeth for crusher roll set,,,1,,
-1 belt for long belts,,,1,,
-crushing/grinding jeffery chain and sprocket for long belt,,,2,,
-rollers for long belts and short belts,,,8,,
-crushing/grinding rubber rod for couplers on long belts & short,,,2,,
-sprocket for long belt,,,2,,
-crushing/grinding drive belts for scalper,,,,,
-crushing/grinding 1 cross belt,,,1,,
-crushing/grinding rollers and bearings for cross belt,,,8,,
-screens,,,18,,
-crushing/grinding heater bar parts,,,2,,
-crushing/grinding rubber gasket for under screens,,,4,,
-crushing/grinding set of segments for dry pans,,,2,,
-crushing/grinding set of plows for dry pan,,,1,,
-crushing/grinding ,,,2,,
-crushing/grinding packing for crown gear shaft roll,,,1,,
-crushing/grinding crown gear,,,1,,
-crushing/grinding step bearing,,,1,,
-crushing/grinding step bearing pump,,,1,,
-crushing/grinding feeder motor,,,1,,
-crushing/grinding feeder pump,,,1,,
-crushing/grinding wheel segments with  holders,,,16,,
-crushing/grinding augers for Hanley 1,,,1,,
-crushing/grinding auger for Hanley 2,,,1,,
-crushing/grinding augers for dry pan screens,,,2,,
-crushing/grinding belts for augers,,,6,,
-crushing/grinding motor and gear box for augers,,,2,,
-crushing/grinding belt for elevators,,,2,,
-crushing/grinding bearings for elevators,,,4,,
-crushing/grinding screen vibrator for dry pan,,,2,,
-crushing/grinding raymond mill bull ring,,,1,,
-crushing/grinding trunnions for raymind mill,,,4,,
-crushing/grinding plows for raymond mill,,,4,,
-crushing/grinding top hat for raymond mill,,,1,,
-crushing/grinding motor & gearbox for cyclone flappers,,,1,,
-crushing/grinding hammers and hammer mill,,,80,,
-crushing/grinding liners for hammer mill set,,,1,,
-crushing/grinding breaker bars for hammer mill,,,4,,
-crushing/grinding clam shells for hammer mill,,,4,,
-crushing/grinding rods for hammer mill,,,64,,
-crushing/grinding trampline belt for hammer mill,,,1,,
-crushing/grinding auger for screens on hammer mill,,,2,,
-crushing/grinding screens for hammer mill,,,14,,
-crushing/grinding side rubbers for screens,,,3,,
-crushing/grinding screen vibrators,,,2,,
-crushing/grinding screen heater parts,,,2,,
+robot heads frame section,0,2,0,0,UNKNOWN,UNKNOWN
+robot heads angle section for heads,0,4,0,0,UNKNOWN,UNKNOWN
+robot heads locking device,0,1,0,0,UNKNOWN,UNKNOWN
+robot heads center plates,0,2,0,0,UNKNOWN,UNKNOWN
+robot heads paddles for gripping,0,4,0,0,UNKNOWN,UNKNOWN
+robot heads linear bearings,0,20,0,0,UNKNOWN,UNKNOWN
+robot heads rails for linear bearings,0,4,0,0,UNKNOWN,UNKNOWN
+robot heads air cylinders for robot heads,0,2,0,0,UNKNOWN,UNKNOWN
+robot heads air valve/solenoid for robot head,0,2,0,0,UNKNOWN,UNKNOWN
+robot heads roller wheel bearings for h92,0,4,0,0,UNKNOWN,UNKNOWN
+cutter gear for frame,1,2,0,0,UNKNOWN,UNKNOWN
+cutter upper & lower pusher gears,0,2,1250,2500,UNKNOWN,UNKNOWN
+cutter linerar bearings for uppeer & cutter lower pusher,0,2,0,0,UNKNOWN,UNKNOWN
+cutter linear bearings for cutter table,0,2,0,0,UNKNOWN,UNKNOWN
+cutter rails for cutter table,0,2,0,0,UNKNOWN,UNKNOWN
+cutter bar stop springs,0,6,0,0,UNKNOWN,UNKNOWN
+cutter belts under cutter,0,2,0,0,UNKNOWN,UNKNOWN
+cutter belts that feed cutter,0,2,0,0,UNKNOWN,UNKNOWN
+cutter scrap belt under cutter,0,2,0,0,UNKNOWN,UNKNOWN
+cutter lift table belts,2,3,0,0,UNKNOWN,UNKNOWN
+cutter lift table raising arm,0,2,0,0,UNKNOWN,UNKNOWN
+cutter lift table rod ends,10,10,0,0,UNKNOWN,UNKNOWN
+extruder feed augers,3,,0,0,UNKNOWN,UNKNOWN
+extruder points,3,33,0,0,UNKNOWN,UNKNOWN
+"extruder 15"" point",2,2,0,0,UNKNOWN,UNKNOWN
+extruder auger sections,12,12,0,0,UNKNOWN,UNKNOWN
+extruder starters,3,2,0,0,UNKNOWN,UNKNOWN
+extruder shredder knives,6,2,0,0,UNKNOWN,UNKNOWN
+extruder vacuum gages,1,3,0,0,UNKNOWN,UNKNOWN
+extruder water gage,0,3,0,0,UNKNOWN,UNKNOWN
+extruder check valve,0,3,0,0,UNKNOWN,UNKNOWN
+glaze/slinger booth slides and tracks for glaze/slinger boot belts thru booths,0,4,0,0,UNKNOWN,UNKNOWN
+glaze/slinger boot belts,0,4,0,0,UNKNOWN,UNKNOWN
+glaze/slinger boot slinger head motors,0,2,0,0,UNKNOWN,UNKNOWN
+glaze/slinger boot belt drive motor & gearbox,0,2,0,0,UNKNOWN,UNKNOWN
+additve auger for Meco,0,1,0,0,UNKNOWN,UNKNOWN
+additve controller for Meco,0,1,0,0,UNKNOWN,UNKNOWN
+additve motor for Meco,0,1,0,0,UNKNOWN,UNKNOWN
+additve belts for Merrick,0,3,0,0,UNKNOWN,UNKNOWN
+additve Control boards for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve Bearings for Merrick,0,8,0,0,UNKNOWN,UNKNOWN
+additve Motors/gear boxes for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve load cell for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve Encoder for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve Power supply for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve Display for Merrick,0,2,0,0,UNKNOWN,UNKNOWN
+additve 1 long belt for fine clay belt repl,0,2,0,0,UNKNOWN,UNKNOWN
+additve rollers for fine clay belts,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding jaws for crushers sets,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding teeth for crusher roll set,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding 1 belt for long belts,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding jeffery chain and sprocket for long belt,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding rollers for long belts and short belts,0,8,0,0,UNKNOWN,UNKNOWN
+crushing/grinding rubber rod for couplers on long belts & short,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding sprocket for long belt,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding drive belts for scalper,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding 1 cross belt,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding rollers and bearings for cross belt,0,8,0,0,UNKNOWN,UNKNOWN
+crushing/grinding screens,0,18,0,0,UNKNOWN,UNKNOWN
+crushing/grinding heater bar parts,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding rubber gasket for under screens,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding set of segments for dry pans,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding set of plows for dry pan,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding packing for crown gear shaft roll,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding crown gear,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding step bearing,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding step bearing pump,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding feeder motor,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding feeder pump,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding wheel segments with  holders,0,16,0,0,UNKNOWN,UNKNOWN
+crushing/grinding augers for Hanley 1,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding auger for Hanley 2,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding augers for dry pan screens,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding belts for augers,0,6,0,0,UNKNOWN,UNKNOWN
+crushing/grinding motor and gear box for augers,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding belt for elevators,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding bearings for elevators,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding screen vibrator for dry pan,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding raymond mill bull ring,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding trunnions for raymind mill,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding plows for raymond mill,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding top hat for raymond mill,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding motor & gearbox for cyclone flappers,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding hammers and hammer mill,0,80,0,0,UNKNOWN,UNKNOWN
+crushing/grinding liners for hammer mill set,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding breaker bars for hammer mill,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding clam shells for hammer mill,0,4,0,0,UNKNOWN,UNKNOWN
+crushing/grinding rods for hammer mill,0,64,0,0,UNKNOWN,UNKNOWN
+crushing/grinding trampline belt for hammer mill,0,1,0,0,UNKNOWN,UNKNOWN
+crushing/grinding auger for screens on hammer mill,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding screens for hammer mill,0,14,0,0,UNKNOWN,UNKNOWN
+crushing/grinding side rubbers for screens,0,3,0,0,UNKNOWN,UNKNOWN
+crushing/grinding screen vibrators,0,2,0,0,UNKNOWN,UNKNOWN
+crushing/grinding screen heater parts,0,2,0,0,UNKNOWN,UNKNOWN
