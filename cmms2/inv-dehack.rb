@@ -2,7 +2,7 @@ require './store/lib/store'
 
 store = $store = Store.new('hanley-cmms')
 $store.delete :inventory
-buff=open('./inv.csv').read.gsub("\r",'').split("\n")
+buff=open('./inv.csv').read.encode('UTF-8', :invalid => :replace).gsub("\r",'').split("\n")
 pa=buff.map do |l|
   a = l.split(",")
   o={
